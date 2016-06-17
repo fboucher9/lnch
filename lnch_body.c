@@ -25,6 +25,9 @@ Description:
 /* Display */
 #include "lnch_display.h"
 
+/* Tree */
+#include "lnch_tree.h"
+
 #if defined(LNCH_FEATURE_XERROR)
 #include "lnch_feature_xerror.h"
 #endif /* #if defined(LNCH_FEATURE_XERROR) */
@@ -157,6 +160,34 @@ static void xterm_event(
 /* Define MAX macro to help with window resizing calculations */
 #define MAX(A, B) ((A) > (B) ? (A) : (B))
 
+
+static void lnch_feature_movesize_grab(
+    struct lnch_ctxt const * const p_ctxt,
+    Window const i_window_id)
+{
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    unsigned int m;
+
+    /* Grab keys and buttons for new client */
+    for (m = 0; m < sizeof(mods)/sizeof(mods[0]); m++)
+    {
+        XGrabButton(p_display->dpy, Button1, Mod1Mask|mods[m], i_window_id,
+            False, ButtonPressMask, GrabModeAsync, GrabModeSync,
+            None, None);
+
+        XGrabButton(p_display->dpy, Button3, Mod1Mask|mods[m], i_window_id,
+            False, ButtonPressMask, GrabModeAsync, GrabModeSync,
+            None, None);
+    }
+}
+
+static void lnch_feature_movesize_init_cb(
+    struct lnch_tree_callback_args const * const p_args)
+{
+    lnch_feature_movesize_grab(p_args->p_ctxt, p_args->i_window_id);
+}
+
 static void movesize_event(
     struct lnch_ctxt const * const p_ctxt,
     XEvent * pev)
@@ -168,8 +199,6 @@ static void movesize_event(
 
     /* Commonly used structure */
     static XWindowChanges wc;
-
-    unsigned int j;
 
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
@@ -268,21 +297,16 @@ static void movesize_event(
             if (!pev->xmap.override_redirect)
             {
                 /* Grab keys and buttons for new client */
-                for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
-                {
-                    XGrabButton(p_display->dpy, Button1, Mod1Mask|mods[j], pev->xmap.window,
-                        False, ButtonPressMask, GrabModeAsync, GrabModeSync,
-                        None, None);
-
-                    XGrabButton(p_display->dpy, Button3, Mod1Mask|mods[j], pev->xmap.window,
-                        False, ButtonPressMask, GrabModeAsync, GrabModeSync,
-                        None, None);
-                }
+                lnch_feature_movesize_grab(p_ctxt, pev->xmap.window);
             }
         }
     }
     else
     {
+        memset(&ev0, 0, sizeof(ev0));
+
+        lnch_tree_enum(p_ctxt, &lnch_feature_movesize_init_cb, NULL);
+
         /* Request for events to be reported to our application */
         p_ctxt->p_display->root_event_mask |= SubstructureNotifyMask;
 
@@ -293,6 +317,30 @@ static void movesize_event(
 #endif /* #if defined(LNCH_FEATURE_MOVESIZE) */
 
 #if defined(LNCH_FEATURE_BUTTON2)
+
+static void lnch_feature_button2_grab(
+    struct lnch_ctxt const * const p_ctxt,
+    Window const i_window_id)
+{
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    unsigned int j;
+
+    for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
+    {
+        XGrabButton(p_display->dpy, Button2, Mod1Mask|mods[j], i_window_id,
+            False, ButtonPressMask, GrabModeAsync, GrabModeSync,
+            None, None);
+    }
+}
+
+static void lnch_feature_button2_cb(
+    struct lnch_tree_callback_args const * const p_args)
+{
+    lnch_feature_button2_grab(
+        p_args->p_ctxt,
+        p_args->i_window_id);
+}
 
 static void button2_event(
     struct lnch_ctxt const * const p_ctxt,
@@ -307,8 +355,6 @@ static void button2_event(
 
     /* Commonly used structure */
     static XWindowChanges wc;
-
-    unsigned int j;
 
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
@@ -456,12 +502,7 @@ static void button2_event(
             if (!pev->xmap.override_redirect)
             {
                 /* Grab keys and buttons for new client */
-                for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
-                {
-                    XGrabButton(p_display->dpy, Button2, Mod1Mask|mods[j], pev->xmap.window,
-                        False, ButtonPressMask, GrabModeAsync, GrabModeSync,
-                        None, None);
-                }
+                lnch_feature_button2_grab(p_ctxt, pev->xmap.window);
             }
         }
     }
@@ -469,6 +510,8 @@ static void button2_event(
     {
         /* Calculate width of a single monitor */
         mw = (p_display->sw >= 2048) ? p_display->sw/2 : p_display->sw;
+
+        lnch_tree_enum(p_ctxt, &lnch_feature_button2_cb, NULL);
 
         /* Request for events to be reported to our application */
         p_ctxt->p_display->root_event_mask |= SubstructureNotifyMask;

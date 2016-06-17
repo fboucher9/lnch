@@ -22,6 +22,8 @@ Description:
 
 #include "lnch_mods.h"
 
+#include "lnch_tree.h"
+
 /* Width of monitor */
 static int mw = 0;
 
@@ -44,6 +46,59 @@ static XWindowAttributes wa;
 
 /* Commonly used structure */
 static XWindowChanges wc;
+
+/*
+
+Function: lnch_feature_grid_grab_keys
+
+Description:
+
+    Register hot keys into given window.
+
+*/
+static
+void
+lnch_feature_grid_grab_keys(
+    struct lnch_ctxt const * const p_ctxt,
+    Window const i_window_id)
+{
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    unsigned int j;
+
+    for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
+    {
+        unsigned int l;
+
+        for (l = 0;
+            l < sizeof(grid_ks_list)/sizeof(grid_ks_list[0]);
+            l ++)
+        {
+            XGrabKey(p_display->dpy, kc_[(unsigned char)grid_ks_list[l][0]], Mod1Mask|mods[j],
+                i_window_id, True, GrabModeAsync, GrabModeAsync);
+        }
+    }
+} /* lnch_feature_grid_grab_keys() */
+
+/*
+
+Function: lnch_feature_grid_init_callback
+
+Description:
+
+    Register hot keys for existing window.
+
+*/
+static
+void
+lnch_feature_grid_init_callback(
+    struct lnch_tree_callback_args const * const p_args)
+{
+    lnch_feature_grid_grab_keys(
+        p_args->p_ctxt,
+        p_args->i_window_id);
+
+} /* lnch_feature_grid_init_callback() */
 
 /*
 
@@ -74,6 +129,9 @@ lnch_feature_grid_init(
         }
     }
 
+    /* Enumerate existing windows */
+    lnch_tree_enum(p_ctxt, &lnch_feature_grid_init_callback, NULL);
+
     /* Request for events to be reported to our application */
     p_ctxt->p_display->root_event_mask |= SubstructureNotifyMask;
 
@@ -96,25 +154,10 @@ lnch_feature_grid_map_notify(
     struct lnch_ctxt const * const p_ctxt,
     XEvent* pev)
 {
-    struct lnch_display const * const p_display = p_ctxt->p_display;
-
     if (!pev->xmap.override_redirect)
     {
         /* Grab keys and buttons for new client */
-        unsigned int j;
-
-        for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
-        {
-            unsigned int l;
-
-            for (l = 0;
-                l < sizeof(grid_ks_list)/sizeof(grid_ks_list[0]);
-                l ++)
-            {
-                XGrabKey(p_display->dpy, kc_[(unsigned char)grid_ks_list[l][0]], Mod1Mask|mods[j],
-                    pev->xmap.window, True, GrabModeAsync, GrabModeAsync);
-            }
-        }
+        lnch_feature_grid_grab_keys(p_ctxt, pev->xmap.window);
     }
 }
 

@@ -13,6 +13,7 @@ LNCH_SRCS = \
     lnch_display.c \
     lnch_body.c \
     lnch_os.c \
+    lnch_tree.c \
     lnch_feature_xerror.c \
     lnch_feature_grid.c \
     lnch_feature_focus.c \

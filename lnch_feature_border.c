@@ -27,11 +27,31 @@ Description:
 /* Display */
 #include "lnch_display.h"
 
+/* Tree */
+#include "lnch_tree.h"
+
 /* Color to use for all borders */
 static XColor color;
 
 /* Commonly used structure */
 static XWindowChanges wc;
+
+static
+void
+lnch_feature_border_set(
+    struct lnch_ctxt const * const p_ctxt,
+    Window const i_window_id)
+{
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    /* Force border width to 1 pixel wide */
+    wc.border_width = 1;
+
+    XConfigureWindow(p_display->dpy, i_window_id, CWBorderWidth, &wc);
+
+    /* Force border color (default color is usually black) */
+    XSetWindowBorder(p_display->dpy, i_window_id, color.pixel);
+} /* lnch_feature_border_set() */
 
 /*
 
@@ -47,17 +67,9 @@ lnch_feature_border_map_notify(
     struct lnch_ctxt const * const p_ctxt,
     XEvent * pev)
 {
-    struct lnch_display const * const p_display = p_ctxt->p_display;
-
     if (!pev->xmap.override_redirect)
     {
-        /* Force border width to 1 pixel wide */
-        wc.border_width = 1;
-
-        XConfigureWindow(p_display->dpy, pev->xmap.window, CWBorderWidth, &wc);
-
-        /* Force border color (default color is usually black) */
-        XSetWindowBorder(p_display->dpy, pev->xmap.window, color.pixel);
+        lnch_feature_border_set(p_ctxt, pev->xmap.window);
     }
 } /* lnch_feature_border_map_notify() */
 
@@ -83,6 +95,26 @@ lnch_feature_border_dispatch(
 
 /*
 
+Function: lnch_feature_border_init_callback
+
+Description:
+
+    Apply border feature to existing window.
+
+*/
+static
+void
+lnch_feature_border_init_callback(
+    struct lnch_tree_callback_args const * const p_args)
+{
+    lnch_feature_border_set(
+        p_args->p_ctxt,
+        p_args->i_window_id);
+
+} /* lnch_feature_border_init_callback() */
+
+/*
+
 Function: lnch_feature_border_init
 
 Description:
@@ -102,6 +134,9 @@ lnch_feature_border_init(
         "#444444",
         &color,
         &color);
+
+    /* enumerate existing windows */
+    lnch_tree_enum(p_ctxt, &lnch_feature_border_init_callback, NULL);
 
 } /* lnch_feature_border_init() */
 
