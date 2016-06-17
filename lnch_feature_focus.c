@@ -131,7 +131,11 @@ lnch_feature_focus_find(
         if ((kc_['s'] == pev->xkey.keycode) &&
             (top != pev->xkey.subwindow))
         {
-            sel = pev->xkey.subwindow;
+            if ((None != pev->xkey.subwindow) &&
+                (p_display->root != pev->xkey.subwindow))
+            {
+                sel = pev->xkey.subwindow;
+            }
         }
 
         XFree(wins);
