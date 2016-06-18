@@ -28,8 +28,8 @@ Description:
 /* Display */
 #include "lnch_display.h"
 
-/* Keyboard modifier masks */
-#include "lnch_mods.h"
+/* Key */
+#include "lnch_key.h"
 
 /* Define default child program */
 #if !defined(LNCH_CHILD_PROGRAM)
@@ -42,9 +42,6 @@ static char const * const
     {
         "x"
     };
-
-/* Array of key codes.  Index with a ascii character ex: 'x' */
-static unsigned int kc_[128];
 
 /* Two in one function, install a SIGCHLD handler and process a SIGCHLD signal.
 This function is required because we create child processes via the fork and
@@ -151,7 +148,7 @@ lnch_feature_child_key_press(
     struct lnch_ctxt const * const p_ctxt,
     XEvent const * const pev)
 {
-    if (kc_['x'] == pev->xkey.keycode)
+    if (p_ctxt->p_key->kc_['x'] == pev->xkey.keycode)
     {
         lnch_feature_child_key_spawn(p_ctxt);
     }
@@ -194,26 +191,16 @@ void
 lnch_feature_child_init(
     struct lnch_ctxt const * const p_ctxt)
 {
-    unsigned int j, l;
+    unsigned int l;
 
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
     lnch_feature_child_sigchld(0);
 
-    /* Translate the list of strings into key codes */
-    for (j = 0; j < sizeof(base_ks_list)/sizeof(base_ks_list[0]); j++)
-    {
-        kc_[(unsigned char)base_ks_list[j][0]] = XKeysymToKeycode(p_display->dpy, XStringToKeysym(base_ks_list[j]));
-    }
-
     /* Grab keys for root window */
-    for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
+    for (l = 0; l < sizeof(base_ks_list)/sizeof(base_ks_list[0]); l ++)
     {
-        for (l = 0; l < sizeof(base_ks_list)/sizeof(base_ks_list[0]); l ++)
-        {
-            XGrabKey(p_display->dpy, kc_[(unsigned char)base_ks_list[l][0]], Mod1Mask|mods[j], p_display->root, True,
-                GrabModeAsync, GrabModeAsync);
-        }
+        lnch_key_grab(p_ctxt, p_display->root, base_ks_list[l]);
     }
 } /* lnch_feature_child_init() */
 

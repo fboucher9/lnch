@@ -12,6 +12,7 @@ LNCH_SRCS = \
     $(LNCH_DST_PATH)/_obj_lnch_body.o \
     $(LNCH_DST_PATH)/_obj_lnch_os.o \
     $(LNCH_DST_PATH)/_obj_lnch_tree.o \
+    $(LNCH_DST_PATH)/_obj_lnch_key.o \
     $(LNCH_DST_PATH)/_obj_lnch_feature_xerror.o \
     $(LNCH_DST_PATH)/_obj_lnch_feature_grid.o \
     $(LNCH_DST_PATH)/_obj_lnch_feature_focus.o \
@@ -30,6 +31,7 @@ LNCH_HDRS = \
     $(LNCH_SRC_PATH)/lnch_feature_grid.h \
     $(LNCH_SRC_PATH)/lnch_feature_redirect.h \
     $(LNCH_SRC_PATH)/lnch_feature_xerror.h \
+    $(LNCH_SRC_PATH)/lnch_key.h \
     $(LNCH_SRC_PATH)/lnch_main.h \
     $(LNCH_SRC_PATH)/lnch_mods.h \
     $(LNCH_SRC_PATH)/lnch_os.h \

@@ -23,6 +23,9 @@ struct lnch_body;
 /* Predefine display module */
 struct lnch_display;
 
+/* Predefine key module */
+struct lnch_key;
+
 /*
 
 Structure: lnch_ctxt
@@ -39,6 +42,9 @@ struct lnch_ctxt
 
     /* Pointer to display module */
     struct lnch_display * p_display;
+
+    /* Pointer to key module */
+    struct lnch_key * p_key;
 
 }; /* struct lnch_ctxt */
 

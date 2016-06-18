@@ -27,8 +27,8 @@ Description:
 /* Display */
 #include "lnch_display.h"
 
-/* Key mod flags */
-#include "lnch_mods.h"
+/* Key */
+#include "lnch_key.h"
 
 /* List of hotkeys for focus feature */
 static char const * const
@@ -38,9 +38,6 @@ static char const * const
         "s",
         "d"
     };
-
-/* Array of key codes.  Index with a ascii character ex: 'x' */
-static unsigned int kc_[128];
 
 /* Commonly used structure */
 static XWindowAttributes wa;
@@ -105,18 +102,18 @@ lnch_feature_focus_find(
                 {
                     top = wins[j];
                 }
-                if ((kc_['a'] == pev->xkey.keycode) &&
+                if ((p_ctxt->p_key->kc_['a'] == pev->xkey.keycode) &&
                     (wa.x + wa.width/2 < p_display->sw/2))
                 {
                     sel = wins[j];
                 }
-                else if ((kc_['d'] == pev->xkey.keycode) &&
+                else if ((p_ctxt->p_key->kc_['d'] == pev->xkey.keycode) &&
                     (wa.x + wa.width/2 >= p_display->sw/2))
                 {
                     sel = wins[j];
                 }
                 else if (
-                    (kc_['s'] == pev->xkey.keycode) &&
+                    (p_ctxt->p_key->kc_['s'] == pev->xkey.keycode) &&
                     (wa.x + wa.width/2 - mx >= 0) &&
                     (wa.x + wa.width/2 - mx < p_display->sw/2) &&
                     (wins[j] != pev->xkey.subwindow) &&
@@ -128,7 +125,7 @@ lnch_feature_focus_find(
         }
 
         /* Bring current window to top */
-        if ((kc_['s'] == pev->xkey.keycode) &&
+        if ((p_ctxt->p_key->kc_['s'] == pev->xkey.keycode) &&
             (top != pev->xkey.subwindow))
         {
             if ((None != pev->xkey.subwindow) &&
@@ -152,9 +149,9 @@ lnch_feature_focus_key_press(
     XEvent * pev)
 {
     if (
-        (kc_['a'] == pev->xkey.keycode) ||
-        (kc_['s'] == pev->xkey.keycode) ||
-        (kc_['d'] == pev->xkey.keycode))
+        (p_ctxt->p_key->kc_['a'] == pev->xkey.keycode) ||
+        (p_ctxt->p_key->kc_['s'] == pev->xkey.keycode) ||
+        (p_ctxt->p_key->kc_['d'] == pev->xkey.keycode))
     {
         Window const sel = lnch_feature_focus_find(p_ctxt, pev);
 
@@ -179,25 +176,15 @@ void
 lnch_feature_focus_init(
     struct lnch_ctxt const * const p_ctxt)
 {
-    unsigned int j;
-
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
-    /* Translate the list of strings into key codes */
-    for (j = 0; j < sizeof(focus_ks_list)/sizeof(focus_ks_list[0]); j++)
-    {
-        kc_[(unsigned char)focus_ks_list[j][0]] = XKeysymToKeycode(p_display->dpy, XStringToKeysym(focus_ks_list[j]));
-    }
-
     /* Grab keys for root window */
-    for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
     {
         unsigned int l;
 
         for (l = 0; l < sizeof(focus_ks_list)/sizeof(focus_ks_list[0]); l ++)
         {
-            XGrabKey(p_display->dpy, kc_[(unsigned char)focus_ks_list[l][0]], Mod1Mask|mods[j], p_display->root, True,
-                GrabModeAsync, GrabModeAsync);
+            lnch_key_grab(p_ctxt, p_display->root, focus_ks_list[l]);
         }
     }
 

@@ -28,6 +28,9 @@ Description:
 /* Tree */
 #include "lnch_tree.h"
 
+/* Key */
+#include "lnch_key.h"
+
 #if defined(LNCH_FEATURE_XERROR)
 #include "lnch_feature_xerror.h"
 #endif /* #if defined(LNCH_FEATURE_XERROR) */
@@ -68,6 +71,9 @@ struct lnch_body
 
     /* X resources */
     struct lnch_display o_display;
+
+    /* Key */
+    struct lnch_key o_key;
 
 }; /* struct lnch_body */
 
@@ -525,6 +531,8 @@ lnch_body_init(
         p_body->o_ctxt.p_body = p_body;
 
         p_body->o_ctxt.p_display = &p_body->o_display;
+
+        p_body->o_ctxt.p_key = &p_body->o_key;
 
         /* TODO: parse command-line options */
 

@@ -24,6 +24,8 @@ Description:
 
 #include "lnch_tree.h"
 
+#include "lnch_key.h"
+
 /* Width of monitor */
 static int mw = 0;
 
@@ -37,9 +39,6 @@ static char const * const
         "e",
         "c"
     };
-
-/* Array of key codes.  Index with a ascii character ex: 'x' */
-static unsigned int kc_[256];
 
 /* Commonly used structure */
 static XWindowAttributes wa;
@@ -62,21 +61,13 @@ lnch_feature_grid_grab_keys(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id)
 {
-    struct lnch_display const * const p_display = p_ctxt->p_display;
+    unsigned int l;
 
-    unsigned int j;
-
-    for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
+    for (l = 0;
+        l < sizeof(grid_ks_list)/sizeof(grid_ks_list[0]);
+        l ++)
     {
-        unsigned int l;
-
-        for (l = 0;
-            l < sizeof(grid_ks_list)/sizeof(grid_ks_list[0]);
-            l ++)
-        {
-            XGrabKey(p_display->dpy, kc_[(unsigned char)grid_ks_list[l][0]], Mod1Mask|mods[j],
-                i_window_id, True, GrabModeAsync, GrabModeAsync);
-        }
+        lnch_key_grab(p_ctxt, i_window_id, grid_ks_list[l]);
     }
 } /* lnch_feature_grid_grab_keys() */
 
@@ -118,16 +109,6 @@ lnch_feature_grid_init(
 
     /* Calculate width of a single monitor */
     mw = (p_display->sw >= 2048) ? p_display->sw/2 : p_display->sw;
-
-    /* Translate the list of strings into key codes */
-    {
-        unsigned int j;
-
-        for (j = 0; j < sizeof(grid_ks_list)/sizeof(grid_ks_list[0]); j++)
-        {
-            kc_[(unsigned char)grid_ks_list[j][0]] = XKeysymToKeycode(p_display->dpy, XStringToKeysym(grid_ks_list[j]));
-        }
-    }
 
     /* Enumerate existing windows */
     lnch_tree_enum(p_ctxt, &lnch_feature_grid_init_callback, NULL);
@@ -178,11 +159,11 @@ lnch_feature_grid_key_press(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
-    if ((kc_['z'] == pev->xkey.keycode) ||
-        (kc_['q'] == pev->xkey.keycode) ||
-        (kc_['w'] == pev->xkey.keycode) ||
-        (kc_['e'] == pev->xkey.keycode) ||
-        (kc_['c'] == pev->xkey.keycode))
+    if ((p_ctxt->p_key->kc_['z'] == pev->xkey.keycode) ||
+        (p_ctxt->p_key->kc_['q'] == pev->xkey.keycode) ||
+        (p_ctxt->p_key->kc_['w'] == pev->xkey.keycode) ||
+        (p_ctxt->p_key->kc_['e'] == pev->xkey.keycode) ||
+        (p_ctxt->p_key->kc_['c'] == pev->xkey.keycode))
     {
         int mx;
 
@@ -197,30 +178,30 @@ lnch_feature_grid_key_press(
 
         mx = ((wa.x + wa.width/2) >= mw) ? mw : 0;
 
-        if (kc_['z'] == pev->xkey.keycode)
+        if (p_ctxt->p_key->kc_['z'] == pev->xkey.keycode)
         {
             wc.width = 486;
             wc.height = 331;
         }
-        else if (kc_['w'] == pev->xkey.keycode)
+        else if (p_ctxt->p_key->kc_['w'] == pev->xkey.keycode)
         {
             wc.x = (wc.x + mw) % p_display->sw;
         }
-        else if (kc_['q'] == pev->xkey.keycode)
+        else if (p_ctxt->p_key->kc_['q'] == pev->xkey.keycode)
         {
             wc.x = mx;
             wc.y = 0;
             wc.width = mw/2 - 2;
             wc.height = p_display->sh - 2;
         }
-        else if (kc_['e'] == pev->xkey.keycode)
+        else if (p_ctxt->p_key->kc_['e'] == pev->xkey.keycode)
         {
             wc.x = mx + mw/2 - 1;
             wc.y = 0;
             wc.width = mw/2 - 1;
             wc.height = p_display->sh - 2;
         }
-        else if (kc_['c'] == pev->xkey.keycode)
+        else if (p_ctxt->p_key->kc_['c'] == pev->xkey.keycode)
         {
             if (pev->xkey.y < wa.height/3)
             {
