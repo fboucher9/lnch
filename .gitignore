@@ -1,3 +1,7 @@
 lnch
 lnch.exe
 tags
+*.o
+*.d
+*.cmd
+*.gch
