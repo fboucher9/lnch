@@ -48,6 +48,10 @@ Description:
 #include "lnch_feature_redirect.h"
 #endif /* #if defined(LNCH_FEATURE_REDIRECT) */
 
+#if defined(LNCH_FEATURE_CHILD)
+#include "lnch_feature_child.h"
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
+
 /*
 
 Structure: lnch_body
@@ -69,91 +73,6 @@ struct lnch_body
 
 /* Define key modifier flags */
 #include "lnch_mods.h"
-
-#if defined(LNCH_FEATURE_XTERM)
-
-/* Two in one function, install a SIGCHLD handler and process a SIGCHLD signal.
-This function is required because we create child processes via the fork and
-execlp functions.  The SIGCHLD handler will do cleanup of zombie processes.  */
-static void sigchld(int unused)
-{
-    /* Unused parameter */
-    (void)(unused);
-
-    /* Register a signal handler called for each terminated child process */
-    if (signal(SIGCHLD, sigchld) == SIG_ERR) exit(1);
-
-    /* Wait for child process to be completely terminated */
-    while (0 < waitpid(-1, NULL, WNOHANG));
-
-} /* sigchld() */
-
-static void xterm_event(
-    struct lnch_ctxt const * const p_ctxt,
-    XEvent* pev)
-{
-    /* Define a list of strings that need to be translated into key codes */
-    static char const * const
-        base_ks_list[] =
-        {
-            "x"
-        };
-
-    /* Array of key codes.  Index with a ascii character ex: 'x' */
-    static unsigned int kc_[256];
-
-    unsigned int j, l;
-
-    struct lnch_display const * const p_display = p_ctxt->p_display;
-
-    if (pev)
-    {
-        /* Detect that a keyboard shortcut has been pressed */
-        if (KeyPress == pev->type)
-        {
-            if (kc_['x'] == pev->xkey.keycode)
-            {
-                if (!fork())
-                {
-                    if (p_display->dpy)
-                    {
-                        close(ConnectionNumber(p_display->dpy));
-                    }
-
-                    setsid();
-
-                    /* Launch xterm process */
-                    execlp("/usr/bin/bfst", "/usr/bin/bfst", NULL);
-
-                    /* If launch of xterm fails, exit the fork */
-                    exit(EXIT_FAILURE);
-                }
-            }
-        }
-    }
-    else
-    {
-        sigchld(0);
-
-        /* Translate the list of strings into key codes */
-        for (j = 0; j < sizeof(base_ks_list)/sizeof(base_ks_list[0]); j++)
-        {
-            kc_[(unsigned char)base_ks_list[j][0]] = XKeysymToKeycode(p_display->dpy, XStringToKeysym(base_ks_list[j]));
-        }
-
-        /* Grab keys for root window */
-        for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
-        {
-            for (l = 0; l < sizeof(base_ks_list)/sizeof(base_ks_list[0]); l ++)
-            {
-                XGrabKey(p_display->dpy, kc_[(unsigned char)base_ks_list[l][0]], Mod1Mask|mods[j], p_display->root, True,
-                    GrabModeAsync, GrabModeAsync);
-            }
-        }
-    }
-}
-
-#endif /* #if defined(LNCH_FEATURE_XTERM) */
 
 #if defined(LNCH_FEATURE_MOVESIZE)
 
@@ -551,9 +470,9 @@ lnch_body_event(
     lnch_feature_border_event(p_ctxt, pev);
 #endif /* #if defined(LNCH_FEATURE_BORDER) */
 
-#if defined(LNCH_FEATURE_XTERM)
-    xterm_event(p_ctxt, pev);
-#endif /* #if defined(LNCH_FEATURE_XTERM) */
+#if defined(LNCH_FEATURE_CHILD)
+    lnch_feature_child_event(p_ctxt, pev);
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
 
 #if defined(LNCH_FEATURE_GRID)
     lnch_feature_grid_event(p_ctxt, pev);

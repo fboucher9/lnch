@@ -20,8 +20,8 @@ Description:
 /* Enable move and resize via mouse */
 #define LNCH_FEATURE_MOVESIZE
 
-/* Enable extra code that does launch of xterm children */
-#define LNCH_FEATURE_XTERM
+/* Enable extra code that does launch of children */
+#define LNCH_FEATURE_CHILD
 
 /* Enable hotkeys used to position client windows */
 #define LNCH_FEATURE_GRID
