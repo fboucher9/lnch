@@ -37,11 +37,7 @@ Description:
 #endif /* #if !defined(LNCH_CHILD_PROGRAM) */
 
 /* Define a list of strings that need to be translated into key codes */
-static char const * const
-    base_ks_list[] =
-    {
-        "x"
-    };
+static unsigned int kc_x = 0u;
 
 /* Two in one function, install a SIGCHLD handler and process a SIGCHLD signal.
 This function is required because we create child processes via the fork and
@@ -148,7 +144,7 @@ lnch_feature_child_key_press(
     struct lnch_ctxt const * const p_ctxt,
     XEvent const * const pev)
 {
-    if (p_ctxt->p_key->kc_['x'] == pev->xkey.keycode)
+    if (kc_x == pev->xkey.keycode)
     {
         lnch_feature_child_key_spawn(p_ctxt);
     }
@@ -191,17 +187,13 @@ void
 lnch_feature_child_init(
     struct lnch_ctxt const * const p_ctxt)
 {
-    unsigned int l;
-
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
     lnch_feature_child_sigchld(0);
 
     /* Grab keys for root window */
-    for (l = 0; l < sizeof(base_ks_list)/sizeof(base_ks_list[0]); l ++)
-    {
-        lnch_key_grab(p_ctxt, p_display->root, base_ks_list[l]);
-    }
+    kc_x = lnch_key_grab(p_ctxt, p_display->root, "m-x");
+
 } /* lnch_feature_child_init() */
 
 /*

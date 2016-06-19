@@ -72,9 +72,6 @@ struct lnch_body
     /* X resources */
     struct lnch_display o_display;
 
-    /* Key */
-    struct lnch_key o_key;
-
 }; /* struct lnch_body */
 
 /* Define key modifier flags */
@@ -531,8 +528,6 @@ lnch_body_init(
         p_body->o_ctxt.p_body = p_body;
 
         p_body->o_ctxt.p_display = &p_body->o_display;
-
-        p_body->o_ctxt.p_key = &p_body->o_key;
 
         /* TODO: parse command-line options */
 

@@ -20,25 +20,9 @@ Description:
 /* Predefine context handle */
 struct lnch_ctxt;
 
-/*
-
-Structure: lnch_key
-
-Description:
-
-    Table of translated key codes.
-
-*/
-struct lnch_key
-{
-    /* Table of key codes */
-    unsigned int kc_[128];
-
-}; /* struct lnch_key */
-
 /* Interface: */
 
-void
+unsigned int
 lnch_key_grab(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id,

@@ -37,7 +37,7 @@ Description:
     Register hot key for given window.
 
 */
-void
+unsigned int
 lnch_key_grab(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id,
@@ -45,25 +45,48 @@ lnch_key_grab(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
-    struct lnch_key * const p_key = p_ctxt->p_key;
-
-    unsigned char const i_key_index = (unsigned char)(p_key_string[0]);
-
     unsigned int j;
 
-    p_key->kc_[i_key_index] = XKeysymToKeycode(p_display->dpy, XStringToKeysym(p_key_string));
+    unsigned int i_key_code;
+
+    unsigned int i_mod_mask = 0u;
+
+    char const * p_key_it = p_key_string;
+
+    while (p_key_it[0] && ('-' == p_key_it[1]))
+    {
+        if (('m' == p_key_it[0]) || ('M' == p_key_it[0])
+            || ('a' == p_key_it[0]) || ('A' == p_key_it[0]))
+        {
+            i_mod_mask |= Mod1Mask;
+        }
+        else if (('s' == p_key_it[0]) || ('S' == p_key_it[0]))
+        {
+            i_mod_mask |= ShiftMask;
+        }
+        else if (('c' == p_key_it[0]) || ('C' == p_key_it[0]))
+        {
+            i_mod_mask |= ControlMask;
+        }
+
+        p_key_it += 2;
+    }
+
+    i_key_code = XKeysymToKeycode(p_display->dpy, XStringToKeysym(p_key_it));
 
     for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
     {
         XGrabKey(
             p_display->dpy,
-            p_key->kc_[i_key_index],
-            Mod1Mask|mods[j],
+            i_key_code,
+            i_mod_mask|mods[j],
             i_window_id,
             True,
             GrabModeAsync,
             GrabModeAsync);
     }
+
+    return i_key_code;
 
 } /* lnch_key_grab() */
 

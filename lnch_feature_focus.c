@@ -31,13 +31,11 @@ Description:
 #include "lnch_key.h"
 
 /* List of hotkeys for focus feature */
-static char const * const
-    focus_ks_list[] =
-    {
-        "a",
-        "s",
-        "d"
-    };
+static unsigned int kc_a = 0u;
+
+static unsigned int kc_s = 0u;
+
+static unsigned int kc_d = 0u;
 
 /* Commonly used structure */
 static XWindowAttributes wa;
@@ -102,18 +100,18 @@ lnch_feature_focus_find(
                 {
                     top = wins[j];
                 }
-                if ((p_ctxt->p_key->kc_['a'] == pev->xkey.keycode) &&
+                if ((kc_a == pev->xkey.keycode) &&
                     (wa.x + wa.width/2 < p_display->sw/2))
                 {
                     sel = wins[j];
                 }
-                else if ((p_ctxt->p_key->kc_['d'] == pev->xkey.keycode) &&
+                else if ((kc_d == pev->xkey.keycode) &&
                     (wa.x + wa.width/2 >= p_display->sw/2))
                 {
                     sel = wins[j];
                 }
                 else if (
-                    (p_ctxt->p_key->kc_['s'] == pev->xkey.keycode) &&
+                    (kc_s == pev->xkey.keycode) &&
                     (wa.x + wa.width/2 - mx >= 0) &&
                     (wa.x + wa.width/2 - mx < p_display->sw/2) &&
                     (wins[j] != pev->xkey.subwindow) &&
@@ -125,7 +123,7 @@ lnch_feature_focus_find(
         }
 
         /* Bring current window to top */
-        if ((p_ctxt->p_key->kc_['s'] == pev->xkey.keycode) &&
+        if ((kc_s == pev->xkey.keycode) &&
             (top != pev->xkey.subwindow))
         {
             if ((None != pev->xkey.subwindow) &&
@@ -149,9 +147,9 @@ lnch_feature_focus_key_press(
     XEvent * pev)
 {
     if (
-        (p_ctxt->p_key->kc_['a'] == pev->xkey.keycode) ||
-        (p_ctxt->p_key->kc_['s'] == pev->xkey.keycode) ||
-        (p_ctxt->p_key->kc_['d'] == pev->xkey.keycode))
+        (kc_a == pev->xkey.keycode) ||
+        (kc_s == pev->xkey.keycode) ||
+        (kc_d == pev->xkey.keycode))
     {
         Window const sel = lnch_feature_focus_find(p_ctxt, pev);
 
@@ -179,14 +177,11 @@ lnch_feature_focus_init(
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
     /* Grab keys for root window */
-    {
-        unsigned int l;
+    kc_a = lnch_key_grab(p_ctxt, p_display->root, "m-a");
 
-        for (l = 0; l < sizeof(focus_ks_list)/sizeof(focus_ks_list[0]); l ++)
-        {
-            lnch_key_grab(p_ctxt, p_display->root, focus_ks_list[l]);
-        }
-    }
+    kc_s = lnch_key_grab(p_ctxt, p_display->root, "m-s");
+
+    kc_d = lnch_key_grab(p_ctxt, p_display->root, "m-d");
 
 } /* lnch_feature_focus_init() */
 

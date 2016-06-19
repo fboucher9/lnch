@@ -30,15 +30,15 @@ Description:
 static int mw = 0;
 
 /* List of hotkeys for grid feature */
-static char const * const
-    grid_ks_list[] =
-    {
-        "z",
-        "w",
-        "q",
-        "e",
-        "c"
-    };
+static unsigned int kc_z = 0u;
+
+static unsigned int kc_w = 0u;
+
+static unsigned int kc_q = 0u;
+
+static unsigned int kc_e = 0u;
+
+static unsigned int kc_c = 0u;
 
 /* Commonly used structure */
 static XWindowAttributes wa;
@@ -61,14 +61,16 @@ lnch_feature_grid_grab_keys(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id)
 {
-    unsigned int l;
+    kc_z = lnch_key_grab(p_ctxt, i_window_id, "m-z");
 
-    for (l = 0;
-        l < sizeof(grid_ks_list)/sizeof(grid_ks_list[0]);
-        l ++)
-    {
-        lnch_key_grab(p_ctxt, i_window_id, grid_ks_list[l]);
-    }
+    kc_w = lnch_key_grab(p_ctxt, i_window_id, "m-w");
+
+    kc_q = lnch_key_grab(p_ctxt, i_window_id, "m-q");
+
+    kc_e = lnch_key_grab(p_ctxt, i_window_id, "m-e");
+
+    kc_c = lnch_key_grab(p_ctxt, i_window_id, "m-c");
+
 } /* lnch_feature_grid_grab_keys() */
 
 /*
@@ -159,11 +161,11 @@ lnch_feature_grid_key_press(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
-    if ((p_ctxt->p_key->kc_['z'] == pev->xkey.keycode) ||
-        (p_ctxt->p_key->kc_['q'] == pev->xkey.keycode) ||
-        (p_ctxt->p_key->kc_['w'] == pev->xkey.keycode) ||
-        (p_ctxt->p_key->kc_['e'] == pev->xkey.keycode) ||
-        (p_ctxt->p_key->kc_['c'] == pev->xkey.keycode))
+    if ((kc_z == pev->xkey.keycode) ||
+        (kc_q == pev->xkey.keycode) ||
+        (kc_w == pev->xkey.keycode) ||
+        (kc_e == pev->xkey.keycode) ||
+        (kc_c == pev->xkey.keycode))
     {
         int mx;
 
@@ -178,30 +180,30 @@ lnch_feature_grid_key_press(
 
         mx = ((wa.x + wa.width/2) >= mw) ? mw : 0;
 
-        if (p_ctxt->p_key->kc_['z'] == pev->xkey.keycode)
+        if (kc_z == pev->xkey.keycode)
         {
             wc.width = 486;
             wc.height = 331;
         }
-        else if (p_ctxt->p_key->kc_['w'] == pev->xkey.keycode)
+        else if (kc_w == pev->xkey.keycode)
         {
             wc.x = (wc.x + mw) % p_display->sw;
         }
-        else if (p_ctxt->p_key->kc_['q'] == pev->xkey.keycode)
+        else if (kc_q == pev->xkey.keycode)
         {
             wc.x = mx;
             wc.y = 0;
             wc.width = mw/2 - 2;
             wc.height = p_display->sh - 2;
         }
-        else if (p_ctxt->p_key->kc_['e'] == pev->xkey.keycode)
+        else if (kc_e == pev->xkey.keycode)
         {
             wc.x = mx + mw/2 - 1;
             wc.y = 0;
             wc.width = mw/2 - 1;
             wc.height = p_display->sh - 2;
         }
-        else if (p_ctxt->p_key->kc_['c'] == pev->xkey.keycode)
+        else if (kc_c == pev->xkey.keycode)
         {
             if (pev->xkey.y < wa.height/3)
             {
