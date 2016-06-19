@@ -88,7 +88,7 @@ lnch_feature_redirect_map_request(
 
     if (XGetWindowAttributes(p_display->dpy, pev->xmaprequest.window, &wa) && !wa.override_redirect)
     {
-        XSelectInput(p_display->dpy, pev->xmaprequest.window, EnterWindowMask);
+        XSelectInput(p_display->dpy, pev->xmaprequest.window, wa.your_event_mask | EnterWindowMask);
 
         XMapWindow(p_display->dpy, pev->xmaprequest.window);
 
@@ -215,7 +215,7 @@ lnch_feature_redirect_init_callback(
 
     if (XGetWindowAttributes(p_display->dpy, p_args->i_window_id, &wa) && !wa.override_redirect)
     {
-        XSelectInput(p_display->dpy, p_args->i_window_id, EnterWindowMask);
+        XSelectInput(p_display->dpy, p_args->i_window_id, wa.your_event_mask | EnterWindowMask);
     }
 } /* lnch_feature_redirect_init_callback() */
 
