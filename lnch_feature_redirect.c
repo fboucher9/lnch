@@ -33,6 +33,9 @@ Comments:
 /* Display */
 #include "lnch_display.h"
 
+/* Tree */
+#include "lnch_tree.h"
+
 static int mw = 0;
 
 /* Commonly used structure */
@@ -193,6 +196,31 @@ lnch_feature_redirect_dispatch(
 
 /*
 
+Function: lnch_feature_redirect_init_callback
+
+Description:
+
+    Window enumeration callback.  Register for enter and leave notifications
+    so that we may change input focus on all windows.
+
+*/
+static
+void
+lnch_feature_redirect_init_callback(
+    struct lnch_tree_callback_args const * const p_args)
+{
+    struct lnch_ctxt const * const p_ctxt = p_args->p_ctxt;
+
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    if (XGetWindowAttributes(p_display->dpy, p_args->i_window_id, &wa) && !wa.override_redirect)
+    {
+        XSelectInput(p_display->dpy, p_args->i_window_id, EnterWindowMask);
+    }
+} /* lnch_feature_redirect_init_callback() */
+
+/*
+
 Function: lnch_feature_redirect_init
 
 Description:
@@ -209,6 +237,9 @@ lnch_feature_redirect_init(
 
     /* Calculate width of a single monitor */
     mw = (p_display->sw >= 2048) ? p_display->sw/2 : p_display->sw;
+
+    /* Initialize all existing windows */
+    lnch_tree_enum(p_ctxt, &lnch_feature_redirect_init_callback, NULL);
 
     /* Request for events to be reported to our application */
     p_ctxt->p_display->root_event_mask |= SubstructureRedirectMask;
