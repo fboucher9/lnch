@@ -38,4 +38,7 @@ Description:
 /* Include of Xlib.h for all X11 definitions, too many to list here */
 #include <X11/Xlib.h>
 
+/* Include of Xresource.h for XGetDefault */
+#include <X11/Xresource.h>
+
 /* end-of-file: lnch_os.h */

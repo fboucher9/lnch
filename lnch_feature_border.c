@@ -30,6 +30,9 @@ Description:
 /* Tree */
 #include "lnch_tree.h"
 
+/* Default color for border */
+#define LNCH_FEATURE_BORDER_COLOR "#444444"
+
 /* Color to use for all borders */
 static XColor color;
 
@@ -128,10 +131,22 @@ lnch_feature_border_init(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    char const * p_color_name = NULL;
+
+    if (!p_color_name)
+    {
+        p_color_name = XGetDefault(p_display->dpy, "lnch", "BorderColor");
+    }
+
+    if (!p_color_name)
+    {
+        p_color_name = LNCH_FEATURE_BORDER_COLOR;
+    }
+
     XAllocNamedColor(
         p_display->dpy,
         DefaultColormap(p_display->dpy, p_display->scr),
-        "#444444",
+        p_color_name,
         &color,
         &color);
 
