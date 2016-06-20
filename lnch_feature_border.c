@@ -30,10 +30,8 @@ Description:
 /* Tree */
 #include "lnch_tree.h"
 
-/* Default color for border */
-#define LNCH_FEATURE_BORDER_COLOR_LEAVE "#444444"
-
-#define LNCH_FEATURE_BORDER_COLOR_ENTER "#005577"
+/* Options */
+#include "lnch_opts.h"
 
 /* Color to use for all borders */
 static XColor color_leave;
@@ -220,29 +218,11 @@ lnch_feature_border_init(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
-    char const * p_color_name_leave = NULL;
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
 
-    char const * p_color_name_enter = NULL;
+    char const * p_color_name_leave = p_opts->p_color_leave;
 
-    if (!p_color_name_leave)
-    {
-        p_color_name_leave = XGetDefault(p_display->dpy, "lnch", "LeaveColor");
-    }
-
-    if (!p_color_name_enter)
-    {
-        p_color_name_enter = XGetDefault(p_display->dpy, "lnch", "EnterColor");
-    }
-
-    if (!p_color_name_leave)
-    {
-        p_color_name_leave = LNCH_FEATURE_BORDER_COLOR_LEAVE;
-    }
-
-    if (!p_color_name_enter)
-    {
-        p_color_name_enter = LNCH_FEATURE_BORDER_COLOR_ENTER;
-    }
+    char const * p_color_name_enter = p_opts->p_color_enter;
 
     XAllocNamedColor(
         p_display->dpy,

@@ -31,6 +31,9 @@ Description:
 /* Key */
 #include "lnch_key.h"
 
+/* Options */
+#include "lnch_opts.h"
+
 #if defined(LNCH_FEATURE_XERROR)
 #include "lnch_feature_xerror.h"
 #endif /* #if defined(LNCH_FEATURE_XERROR) */
@@ -71,6 +74,9 @@ struct lnch_body
 
     /* X resources */
     struct lnch_display o_display;
+
+    /* options */
+    struct lnch_opts o_opts;
 
 }; /* struct lnch_body */
 
@@ -513,12 +519,6 @@ lnch_body_init(
 
     struct lnch_body * p_body;
 
-    /* Unused parameter */
-    (void)(argc);
-
-    /* Unused parameter */
-    (void)(argv);
-
     p_body = (struct lnch_body *)(malloc(sizeof(*p_body)));
 
     if (p_body)
@@ -529,10 +529,13 @@ lnch_body_init(
 
         p_body->o_ctxt.p_display = &p_body->o_display;
 
-        /* TODO: parse command-line options */
+        p_body->o_ctxt.p_opts = &p_body->o_opts;
 
         if (lnch_display_init(&p_body->o_ctxt))
         {
+            /* parse command-line options */
+            lnch_opts_init(&p_body->o_ctxt, argc, argv);
+
             p_ctxt = &p_body->o_ctxt;
         }
         else

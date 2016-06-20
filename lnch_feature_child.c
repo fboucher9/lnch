@@ -31,10 +31,8 @@ Description:
 /* Key */
 #include "lnch_key.h"
 
-/* Define default child program */
-#if !defined(LNCH_CHILD_PROGRAM)
-#define LNCH_CHILD_PROGRAM "/usr/bin/bfst"
-#endif /* #if !defined(LNCH_CHILD_PROGRAM) */
+/* Options */
+#include "lnch_opts.h"
 
 /* Define a list of strings that need to be translated into key codes */
 static unsigned int kc_x = 0u;
@@ -99,8 +97,11 @@ lnch_feature_child_exec(
     /* Create a new process group */
     setsid();
 
-    /* Launch child process */
-    execlp(LNCH_CHILD_PROGRAM, LNCH_CHILD_PROGRAM, NULL);
+    {
+        struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
+        execvp((char *)(p_opts->p_exec_child[0]), (char * *)(p_opts->p_exec_child));
+    }
 
     /* If launch of child fails, exit the fork */
     exit(EXIT_FAILURE);
@@ -189,10 +190,12 @@ lnch_feature_child_init(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
     lnch_feature_child_sigchld(0);
 
     /* Grab keys for root window */
-    kc_x = lnch_key_grab(p_ctxt, p_display->root, "m-x");
+    kc_x = lnch_key_grab(p_ctxt, p_display->root, p_opts->p_key_child);
 
 } /* lnch_feature_child_init() */
 
