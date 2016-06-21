@@ -71,6 +71,85 @@ lnch_feature_redirect_enter_notify(
 
 /*
 
+Function: lnch_feature_redirect_center_window
+
+Description:
+
+    Center window around current mouse pointer position.
+
+Comments:
+
+    -   To avoid flashing, this must be done before window is mapped.
+
+    -   By calling this from MapRequest event, it centers the window on both
+        a new window creation or on a reparent.
+
+*/
+static
+void
+lnch_feature_redirect_center_window(
+    struct lnch_ctxt const * const p_ctxt,
+    Window const i_window_id)
+{
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    int x;
+
+    int y;
+
+    int mx;
+
+    /* Get position of pointer relative to root window */
+    {
+        int di;
+
+        unsigned int du;
+
+        Window d1;
+
+        XQueryPointer(
+            p_display->dpy,
+            p_display->root,
+            &d1,
+            &d1,
+            &x,
+            &y,
+            &di,
+            &di,
+            &du);
+    }
+
+    /* Get window width and height */
+    XGetWindowAttributes(p_display->dpy, i_window_id, &wa);
+
+    /* Calculate left coordinate of monitor under cursor */
+    mx = (x < mw) ? 0 : mw;
+
+    /* Calculate horizontal position of window centered on mouse */
+    x -= wa.width/2;
+
+    /* Calculate vertical position of window centered on mouse */
+    y -= wa.height/2;
+
+    /* Clip horizontal position to right edge of monitor */
+    if ((x + wa.width + 2) > mx + mw) x = mx + mw - wa.width - 2;
+
+    /* Clip vertical position to bottom edge of monitor */
+    if ((y + wa.height + 2) > (int)(p_display->sh)) y = p_display->sh - wa.height - 2;
+
+    /* Clip horizontal position to left edge of monitor */
+    if (x < mx) x = mx;
+
+    /* Clip vertical position to top edge of monitor */
+    if (y < 0) y = 0;
+
+    /* Apply new position of window */
+    XMoveWindow(p_display->dpy, i_window_id, x, y);
+
+} /* lnch_feature_redirect_center_window() */
+
+/*
+
 Function: lnch_feature_redirect_map_request
 
 Description:
@@ -90,46 +169,9 @@ lnch_feature_redirect_map_request(
     {
         XSelectInput(p_display->dpy, pev->xmaprequest.window, wa.your_event_mask | EnterWindowMask);
 
+        lnch_feature_redirect_center_window(p_ctxt, pev->xmaprequest.window);
+
         XMapWindow(p_display->dpy, pev->xmaprequest.window);
-
-        {
-            int x;
-            int y;
-            int di;
-            int mx;
-            unsigned int du;
-            Window d1;
-
-            /* Get position of pointer relative to root window */
-            XQueryPointer(p_display->dpy, p_display->root, &d1, &d1, &x, &y, &di, &di, &du);
-
-            /* Get window width and height */
-            XGetWindowAttributes(p_display->dpy, pev->xmaprequest.window, &wa);
-
-            /* Calculate left coordinate of monitor under cursor */
-            mx = (x < mw) ? 0 : mw;
-
-            /* Calculate horizontal position of window centered on mouse */
-            x -= wa.width/2;
-
-            /* Calculate vertical position of window centered on mouse */
-            y -= wa.height/2;
-
-            /* Clip horizontal position to right edge of monitor */
-            if ((x + wa.width + 2) > mx + mw) x = mx + mw - wa.width - 2;
-
-            /* Clip vertical position to bottom edge of monitor */
-            if ((y + wa.height + 2) > (int)(p_display->sh)) y = p_display->sh - wa.height - 2;
-
-            /* Clip horizontal position to left edge of monitor */
-            if (x < mx) x = mx;
-
-            /* Clip vertical position to top edge of monitor */
-            if (y < 0) y = 0;
-
-            /* Apply new position of window */
-            XMoveWindow(p_display->dpy, pev->xmaprequest.window, x, y);
-        }
     }
 } /* lnch_feature_redirect_map_request() */
 
