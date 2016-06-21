@@ -52,16 +52,14 @@ static void lnch_feature_movesize_grab(
 
     unsigned int m;
 
-    unsigned int const i_mod_mask = lnch_key_convert_mod_char(p_opts->p_key_mod);
-
     /* Grab keys and buttons for new client */
     for (m = 0; m < sizeof(mods)/sizeof(mods[0]); m++)
     {
-        XGrabButton(p_display->dpy, Button1, i_mod_mask|mods[m], i_window_id,
+        XGrabButton(p_display->dpy, Button1, p_opts->i_mod_mask|mods[m], i_window_id,
             False, ButtonPressMask, GrabModeAsync, GrabModeSync,
             None, None);
 
-        XGrabButton(p_display->dpy, Button3, i_mod_mask|mods[m], i_window_id,
+        XGrabButton(p_display->dpy, Button3, p_opts->i_mod_mask|mods[m], i_window_id,
             False, ButtonPressMask, GrabModeAsync, GrabModeSync,
             None, None);
     }

@@ -57,6 +57,8 @@ struct lnch_opts
 
     char const * const * p_exec_child;
 
+    unsigned int i_mod_mask;
+
 }; /* struct lnch_opts */
 
 /* Interface: */

@@ -25,10 +25,16 @@ Description:
 /* Display */
 #include "lnch_display.h"
 
+/* Key */
+#include "lnch_key.h"
+
 /* Default color for border */
 #define LNCH_FEATURE_BORDER_COLOR_LEAVE "#222222"
 
 #define LNCH_FEATURE_BORDER_COLOR_ENTER "#444444"
+
+/* Default modifier mask */
+#define LNCH_KEY_DEFAULT Mod1Mask
 
 /* Default key for child feature */
 #define LNCH_FEATURE_CHILD_KEY "x-x"
@@ -223,6 +229,19 @@ void lnch_opts_init(
     if (!p_opts->p_key_mod)
     {
         p_opts->p_key_mod = XGetDefault(p_display->dpy, "lnch", "KeyMod");
+    }
+
+    if (p_opts->p_key_mod)
+    {
+        struct lnch_key_descriptor o_mod_desc;
+
+        lnch_key_parse(p_ctxt, p_opts->p_key_mod, &o_mod_desc);
+
+        p_opts->i_mod_mask = o_mod_desc.i_mod_mask;
+    }
+    else
+    {
+        p_opts->i_mod_mask = LNCH_KEY_DEFAULT;
     }
 
     if (!p_opts->p_key_child)
