@@ -39,6 +39,10 @@ struct lnch_key_descriptor
 
 /* Interface: */
 
+unsigned int
+lnch_key_convert_mod_char(
+    char const * const p_key_mod);
+
 void
 lnch_key_parse(
     struct lnch_ctxt const * const p_ctxt,

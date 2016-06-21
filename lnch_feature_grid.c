@@ -26,6 +26,8 @@ Description:
 
 #include "lnch_key.h"
 
+#include "lnch_opts.h"
+
 /* Width of monitor */
 static int mw = 0;
 
@@ -61,15 +63,17 @@ lnch_feature_grid_grab_keys(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id)
 {
-    kc_z = lnch_key_grab(p_ctxt, i_window_id, "m-z");
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
 
-    kc_w = lnch_key_grab(p_ctxt, i_window_id, "m-w");
+    kc_z = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_reset);
 
-    kc_q = lnch_key_grab(p_ctxt, i_window_id, "m-q");
+    kc_w = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_toggle);
 
-    kc_e = lnch_key_grab(p_ctxt, i_window_id, "m-e");
+    kc_q = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_left);
 
-    kc_c = lnch_key_grab(p_ctxt, i_window_id, "m-c");
+    kc_e = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_right);
+
+    kc_c = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_snap);
 
 } /* lnch_feature_grid_grab_keys() */
 

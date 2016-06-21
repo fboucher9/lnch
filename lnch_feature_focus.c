@@ -30,6 +30,9 @@ Description:
 /* Key */
 #include "lnch_key.h"
 
+/* Options */
+#include "lnch_opts.h"
+
 /* List of hotkeys for focus feature */
 static unsigned int kc_a = 0u;
 
@@ -176,12 +179,14 @@ lnch_feature_focus_init(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
     /* Grab keys for root window */
-    kc_a = lnch_key_grab(p_ctxt, p_display->root, "m-a");
+    kc_a = lnch_key_grab(p_ctxt, p_display->root, p_opts->p_key_focus_left);
 
-    kc_s = lnch_key_grab(p_ctxt, p_display->root, "m-s");
+    kc_s = lnch_key_grab(p_ctxt, p_display->root, p_opts->p_key_focus_next);
 
-    kc_d = lnch_key_grab(p_ctxt, p_display->root, "m-d");
+    kc_d = lnch_key_grab(p_ctxt, p_display->root, p_opts->p_key_focus_right);
 
 } /* lnch_feature_focus_init() */
 

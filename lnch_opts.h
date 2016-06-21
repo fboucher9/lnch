@@ -35,7 +35,25 @@ struct lnch_opts
 
     char const * p_color_leave;
 
+    char const * p_key_mod;
+
     char const * p_key_child;
+
+    char const * p_key_focus_left;
+
+    char const * p_key_focus_next;
+
+    char const * p_key_focus_right;
+
+    char const * p_key_grid_left;
+
+    char const * p_key_grid_right;
+
+    char const * p_key_grid_snap;
+
+    char const * p_key_grid_reset;
+
+    char const * p_key_grid_toggle;
 
     char const * const * p_exec_child;
 

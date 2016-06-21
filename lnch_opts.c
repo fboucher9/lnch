@@ -31,7 +31,19 @@ Description:
 #define LNCH_FEATURE_BORDER_COLOR_ENTER "#444444"
 
 /* Default key for child feature */
-#define LNCH_FEATURE_CHILD_KEY "M-x"
+#define LNCH_FEATURE_CHILD_KEY "x-x"
+
+/* Default keys for focus feature */
+#define LNCH_FEATURE_FOCUS_LEFT_KEY "x-a"
+#define LNCH_FEATURE_FOCUS_RIGHT_KEY "x-d"
+#define LNCH_FEATURE_FOCUS_NEXT_KEY "x-s"
+
+/* Default keys for grid feature */
+#define LNCH_FEATURE_GRID_LEFT_KEY "x-q"
+#define LNCH_FEATURE_GRID_RIGHT_KEY "x-e"
+#define LNCH_FEATURE_GRID_TOGGLE_KEY "x-w"
+#define LNCH_FEATURE_GRID_RESET_KEY "x-z"
+#define LNCH_FEATURE_GRID_SNAP_KEY "x-c"
 
 /* Default child program to launch */
 #define LNCH_FEATURE_CHILD_PROGRAM "/usr/bin/bfst"
@@ -92,6 +104,87 @@ void lnch_opts_init(
                 argi ++;
             }
         }
+        else if (0 == strcmp(argv[argi], "-ka"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_focus_left = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-ks"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_focus_next = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-kd"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_focus_right = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-kq"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_grid_left = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-kw"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_grid_toggle = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-ke"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_grid_right = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-kz"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_grid_reset = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-kc"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_grid_snap = argv[argi];
+                argi ++;
+            }
+        }
+        else if (0 == strcmp(argv[argi], "-m"))
+        {
+            argi ++;
+            if (argi < argc)
+            {
+                p_opts->p_key_mod = argv[argi];
+                argi ++;
+            }
+        }
         else if (0 == strcmp(argv[argi], "-e"))
         {
             argi ++;
@@ -127,6 +220,11 @@ void lnch_opts_init(
         }
     }
 
+    if (!p_opts->p_key_mod)
+    {
+        p_opts->p_key_mod = XGetDefault(p_display->dpy, "lnch", "KeyMod");
+    }
+
     if (!p_opts->p_key_child)
     {
         p_opts->p_key_child = XGetDefault(p_display->dpy, "lnch", "KeyChild");
@@ -134,6 +232,86 @@ void lnch_opts_init(
         if (!p_opts->p_key_child)
         {
             p_opts->p_key_child = LNCH_FEATURE_CHILD_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_focus_left)
+    {
+        p_opts->p_key_focus_left = XGetDefault(p_display->dpy, "lnch", "KeyFocusLeft");
+
+        if (!p_opts->p_key_focus_left)
+        {
+            p_opts->p_key_focus_left = LNCH_FEATURE_FOCUS_LEFT_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_focus_right)
+    {
+        p_opts->p_key_focus_right = XGetDefault(p_display->dpy, "lnch", "KeyFocusRight");
+
+        if (!p_opts->p_key_focus_right)
+        {
+            p_opts->p_key_focus_right = LNCH_FEATURE_FOCUS_RIGHT_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_focus_next)
+    {
+        p_opts->p_key_focus_next = XGetDefault(p_display->dpy, "lnch", "KeyFocusNext");
+
+        if (!p_opts->p_key_focus_next)
+        {
+            p_opts->p_key_focus_next = LNCH_FEATURE_FOCUS_NEXT_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_grid_left)
+    {
+        p_opts->p_key_grid_left = XGetDefault(p_display->dpy, "lnch", "KeyGridLeft");
+
+        if (!p_opts->p_key_grid_left)
+        {
+            p_opts->p_key_grid_left = LNCH_FEATURE_GRID_LEFT_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_grid_right)
+    {
+        p_opts->p_key_grid_right = XGetDefault(p_display->dpy, "lnch", "KeyGridRight");
+
+        if (!p_opts->p_key_grid_right)
+        {
+            p_opts->p_key_grid_right = LNCH_FEATURE_GRID_RIGHT_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_grid_toggle)
+    {
+        p_opts->p_key_grid_toggle = XGetDefault(p_display->dpy, "lnch", "KeyGridToggle");
+
+        if (!p_opts->p_key_grid_toggle)
+        {
+            p_opts->p_key_grid_toggle = LNCH_FEATURE_GRID_TOGGLE_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_grid_reset)
+    {
+        p_opts->p_key_grid_reset = XGetDefault(p_display->dpy, "lnch", "KeyGridReset");
+
+        if (!p_opts->p_key_grid_reset)
+        {
+            p_opts->p_key_grid_reset = LNCH_FEATURE_GRID_RESET_KEY;
+        }
+    }
+
+    if (!p_opts->p_key_grid_snap)
+    {
+        p_opts->p_key_grid_snap = XGetDefault(p_display->dpy, "lnch", "KeyGridSnap");
+
+        if (!p_opts->p_key_grid_snap)
+        {
+            p_opts->p_key_grid_snap = LNCH_FEATURE_GRID_SNAP_KEY;
         }
     }
 

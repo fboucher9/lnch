@@ -30,13 +30,17 @@ Description:
 /* Tree */
 #include "lnch_tree.h"
 
+/* Options */
+#include "lnch_opts.h"
+
+/* Keys */
+#include "lnch_key.h"
+
 /* Define key modifier flags */
 #include "lnch_mods.h"
 
 /* Define MAX macro to help with window resizing calculations */
 #define MAX(A, B) ((A) > (B) ? (A) : (B))
-
-#define LNCH_FEATURE_MOVESIZE_MODMASK Mod4Mask
 
 static void lnch_feature_movesize_grab(
     struct lnch_ctxt const * const p_ctxt,
@@ -44,16 +48,20 @@ static void lnch_feature_movesize_grab(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
     unsigned int m;
+
+    unsigned int const i_mod_mask = lnch_key_convert_mod_char(p_opts->p_key_mod);
 
     /* Grab keys and buttons for new client */
     for (m = 0; m < sizeof(mods)/sizeof(mods[0]); m++)
     {
-        XGrabButton(p_display->dpy, Button1, LNCH_FEATURE_MOVESIZE_MODMASK|mods[m], i_window_id,
+        XGrabButton(p_display->dpy, Button1, i_mod_mask|mods[m], i_window_id,
             False, ButtonPressMask, GrabModeAsync, GrabModeSync,
             None, None);
 
-        XGrabButton(p_display->dpy, Button3, LNCH_FEATURE_MOVESIZE_MODMASK|mods[m], i_window_id,
+        XGrabButton(p_display->dpy, Button3, i_mod_mask|mods[m], i_window_id,
             False, ButtonPressMask, GrabModeAsync, GrabModeSync,
             None, None);
     }

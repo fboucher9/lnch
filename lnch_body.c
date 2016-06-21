@@ -89,19 +89,21 @@ struct lnch_body
 
 #if defined(LNCH_FEATURE_BUTTON2)
 
-#define LNCH_FEATURE_BUTTON2_MODMASK Mod1Mask
-
 static void lnch_feature_button2_grab(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id)
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
     unsigned int j;
+
+    unsigned int i_mod_mask = lnch_key_convert_mod_char(p_opts->p_key_mod);
 
     for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
     {
-        XGrabButton(p_display->dpy, Button2, LNCH_FEATURE_BUTTON2_MODMASK|mods[j], i_window_id,
+        XGrabButton(p_display->dpy, Button2, i_mod_mask|mods[j], i_window_id,
             False, ButtonPressMask, GrabModeAsync, GrabModeSync,
             None, None);
     }
