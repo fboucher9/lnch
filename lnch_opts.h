@@ -31,33 +31,59 @@ Description:
 */
 struct lnch_opts
 {
-    char const * p_color_enter;
+    unsigned int i_mod_mask;
 
-    char const * p_color_leave;
+    unsigned int a_padding[1u];
 
     char const * p_key_mod;
 
+#if defined(LNCH_FEATURE_BORDER)
+    char const * p_color_enter;
+#endif /* #if defined(LNCH_FEATURE_BORDER) */
+
+#if defined(LNCH_FEATURE_BORDER)
+    char const * p_color_leave;
+#endif /* #if defined(LNCH_FEATURE_BORDER) */
+
+#if defined(LNCH_FEATURE_CHILD)
     char const * p_key_child;
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
 
-    char const * p_key_focus_left;
-
-    char const * p_key_focus_next;
-
-    char const * p_key_focus_right;
-
-    char const * p_key_grid_left;
-
-    char const * p_key_grid_right;
-
-    char const * p_key_grid_snap;
-
-    char const * p_key_grid_reset;
-
-    char const * p_key_grid_toggle;
-
+#if defined(LNCH_FEATURE_CHILD)
     char const * p_exec_child;
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
 
-    unsigned int i_mod_mask;
+#if defined(LNCH_FEATURE_FOCUS)
+    char const * p_key_focus_left;
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
+#if defined(LNCH_FEATURE_FOCUS)
+    char const * p_key_focus_next;
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
+#if defined(LNCH_FEATURE_FOCUS)
+    char const * p_key_focus_right;
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
+#if defined(LNCH_FEATURE_GRID)
+    char const * p_key_grid_left;
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    char const * p_key_grid_right;
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    char const * p_key_grid_snap;
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    char const * p_key_grid_reset;
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    char const * p_key_grid_toggle;
+#endif /* #if defined(LNCH_FEATURE_GRID) */
 
 }; /* struct lnch_opts */
 

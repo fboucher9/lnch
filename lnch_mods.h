@@ -30,10 +30,10 @@ static unsigned int const
     LockMask,
 
     /* CapLock is off and NumLock is ON */
-    (1u << 4),
+    Mod2Mask,
 
     /* CapLock in ON and NumLock is ON */
-    (1u << 4) | LockMask
+    Mod2Mask | LockMask
 
 };
 

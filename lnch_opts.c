@@ -51,46 +51,6 @@ Definitions for command-line options and X resources:
 
 */
 
-/* border leave color: */
-
-/* Switch for border leave color */
-#define LNCH_OPTS_BORDER_LEAVE_COLOR_SWITCH "-bg"
-
-/* Resource for border leave color */
-#define LNCH_OPTS_BORDER_LEAVE_COLOR_RES "LeaveColor"
-
-/* Default value for border leave color */
-#define LNCH_OPTS_BORDER_LEAVE_COLOR_DEFAULT "#222222"
-
-static
-struct lnch_opts_descriptor const
-g_border_leave_color =
-{
-    LNCH_OPTS_BORDER_LEAVE_COLOR_SWITCH,
-    LNCH_OPTS_BORDER_LEAVE_COLOR_RES,
-    LNCH_OPTS_BORDER_LEAVE_COLOR_DEFAULT
-};
-
-/* border enter color: */
-
-/* Switch for border enter color */
-#define LNCH_OPTS_BORDER_ENTER_COLOR_SWITCH "-fg"
-
-/* Resource for border enter color */
-#define LNCH_OPTS_BORDER_ENTER_COLOR_RES "EnterColor"
-
-/* Default value for border enter color */
-#define LNCH_OPTS_BORDER_ENTER_COLOR_DEFAULT "#444444"
-
-static
-struct lnch_opts_descriptor const
-g_border_enter_color =
-{
-    LNCH_OPTS_BORDER_ENTER_COLOR_SWITCH,
-    LNCH_OPTS_BORDER_ENTER_COLOR_RES,
-    LNCH_OPTS_BORDER_ENTER_COLOR_DEFAULT
-};
-
 /* mod mask: */
 
 /* Switch for mod mask */
@@ -111,7 +71,57 @@ g_mod_mask =
     LNCH_OPTS_MOD_MASK_DEFAULT
 };
 
+/* border leave color: */
+
+#if defined(LNCH_FEATURE_BORDER)
+
+/* Switch for border leave color */
+#define LNCH_OPTS_BORDER_LEAVE_COLOR_SWITCH "-bg"
+
+/* Resource for border leave color */
+#define LNCH_OPTS_BORDER_LEAVE_COLOR_RES "LeaveColor"
+
+/* Default value for border leave color */
+#define LNCH_OPTS_BORDER_LEAVE_COLOR_DEFAULT "#222222"
+
+static
+struct lnch_opts_descriptor const
+g_border_leave_color =
+{
+    LNCH_OPTS_BORDER_LEAVE_COLOR_SWITCH,
+    LNCH_OPTS_BORDER_LEAVE_COLOR_RES,
+    LNCH_OPTS_BORDER_LEAVE_COLOR_DEFAULT
+};
+
+#endif /* #if defined(LNCH_FEATURE_BORDER) */
+
+/* border enter color: */
+
+#if defined(LNCH_FEATURE_BORDER)
+
+/* Switch for border enter color */
+#define LNCH_OPTS_BORDER_ENTER_COLOR_SWITCH "-fg"
+
+/* Resource for border enter color */
+#define LNCH_OPTS_BORDER_ENTER_COLOR_RES "EnterColor"
+
+/* Default value for border enter color */
+#define LNCH_OPTS_BORDER_ENTER_COLOR_DEFAULT "#444444"
+
+static
+struct lnch_opts_descriptor const
+g_border_enter_color =
+{
+    LNCH_OPTS_BORDER_ENTER_COLOR_SWITCH,
+    LNCH_OPTS_BORDER_ENTER_COLOR_RES,
+    LNCH_OPTS_BORDER_ENTER_COLOR_DEFAULT
+};
+
+#endif /* #if defined(LNCH_FEATURE_BORDER) */
+
 /* child key: */
+
+#if defined(LNCH_FEATURE_CHILD)
 
 /* Switch for child key */
 #define LNCH_OPTS_CHILD_KEY_SWITCH "-kx"
@@ -131,7 +141,35 @@ g_child_key =
     LNCH_OPTS_CHILD_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
+
+/* child program: */
+
+#if defined(LNCH_FEATURE_CHILD)
+
+/* Switch for child program */
+#define LNCH_OPTS_CHILD_PROGRAM_SWITCH "-e"
+
+/* Resource for child program */
+#define LNCH_OPTS_CHILD_PROGRAM_RES "Exec"
+
+/* Default child program to launch */
+#define LNCH_OPTS_CHILD_PROGRAM_DEFAULT "/usr/bin/bfst"
+
+static
+struct lnch_opts_descriptor const
+g_child_program =
+{
+    LNCH_OPTS_CHILD_PROGRAM_SWITCH,
+    LNCH_OPTS_CHILD_PROGRAM_RES,
+    LNCH_OPTS_CHILD_PROGRAM_DEFAULT
+};
+
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
+
 /* focus left key: */
+
+#if defined(LNCH_FEATURE_FOCUS)
 
 /* Switch */
 #define LNCH_OPTS_FOCUS_LEFT_KEY_SWITCH "-ka"
@@ -151,7 +189,11 @@ g_focus_left_key =
     LNCH_OPTS_FOCUS_LEFT_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
 /* focus right key: */
+
+#if defined(LNCH_FEATURE_FOCUS)
 
 /* Switch */
 #define LNCH_OPTS_FOCUS_RIGHT_KEY_SWITCH "-kd"
@@ -171,7 +213,11 @@ g_focus_right_key =
     LNCH_OPTS_FOCUS_RIGHT_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
 /* focus next key: */
+
+#if defined(LNCH_FEATURE_FOCUS)
 
 /* Switch */
 #define LNCH_OPTS_FOCUS_NEXT_KEY_SWITCH "-ks"
@@ -191,7 +237,11 @@ g_focus_next_key =
     LNCH_OPTS_FOCUS_NEXT_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
 /* grid left key: */
+
+#if defined(LNCH_FEATURE_GRID)
 
 /* Switch */
 #define LNCH_OPTS_GRID_LEFT_KEY_SWITCH "-kq"
@@ -211,7 +261,11 @@ g_grid_left_key =
     LNCH_OPTS_GRID_LEFT_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
 /* grid right key: */
+
+#if defined(LNCH_FEATURE_GRID)
 
 /* Switch */
 #define LNCH_OPTS_GRID_RIGHT_KEY_SWITCH "-ke"
@@ -231,7 +285,11 @@ g_grid_right_key =
     LNCH_OPTS_GRID_RIGHT_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
 /* grid toggle key: */
+
+#if defined(LNCH_FEATURE_GRID)
 
 /* Switch */
 #define LNCH_OPTS_GRID_TOGGLE_KEY_SWITCH "-kw"
@@ -251,7 +309,11 @@ g_grid_toggle_key =
     LNCH_OPTS_GRID_TOGGLE_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
 /* grid reset key: */
+
+#if defined(LNCH_FEATURE_GRID)
 
 /* Switch */
 #define LNCH_OPTS_GRID_RESET_KEY_SWITCH "-kz"
@@ -271,7 +333,11 @@ g_grid_reset_key =
     LNCH_OPTS_GRID_RESET_KEY_DEFAULT
 };
 
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
 /* grid snap key: */
+
+#if defined(LNCH_FEATURE_GRID)
 
 /* Switch */
 #define LNCH_OPTS_GRID_SNAP_KEY_SWITCH "-kc"
@@ -291,25 +357,7 @@ g_grid_snap_key =
     LNCH_OPTS_GRID_SNAP_KEY_DEFAULT
 };
 
-/* child program: */
-
-/* Switch for child program */
-#define LNCH_OPTS_CHILD_PROGRAM_SWITCH "-e"
-
-/* Resource for child program */
-#define LNCH_OPTS_CHILD_PROGRAM_RES "Exec"
-
-/* Default child program to launch */
-#define LNCH_OPTS_CHILD_PROGRAM_DEFAULT "/usr/bin/bfst"
-
-static
-struct lnch_opts_descriptor const
-g_child_program =
-{
-    LNCH_OPTS_CHILD_PROGRAM_SWITCH,
-    LNCH_OPTS_CHILD_PROGRAM_RES,
-    LNCH_OPTS_CHILD_PROGRAM_DEFAULT
-};
+#endif /* #if defined(LNCH_FEATURE_GRID) */
 
 static
 char const *
@@ -367,57 +415,81 @@ void lnch_opts_init(
 {
     struct lnch_opts * const p_opts = p_ctxt->p_opts;
 
-    p_opts->p_color_leave =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_border_leave_color);
-
-    p_opts->p_color_enter =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_border_enter_color);
-
-    p_opts->p_key_child =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_child_key);
-
-    p_opts->p_key_focus_left =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_focus_left_key);
-
-    p_opts->p_key_focus_next =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_focus_next_key);
-
-    p_opts->p_key_focus_right =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_focus_right_key);
-
-    p_opts->p_key_grid_left =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_grid_left_key);
-
-    p_opts->p_key_grid_toggle =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_grid_toggle_key);
-
-    p_opts->p_key_grid_right =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_grid_right_key);
-
-    p_opts->p_key_grid_reset =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_grid_reset_key);
-
-    p_opts->p_key_grid_snap =
-        lnch_opts_find(p_ctxt, argc, argv,
-            &g_grid_snap_key);
-
     p_opts->p_key_mod =
         lnch_opts_find(p_ctxt, argc, argv,
             &g_mod_mask);
 
+#if defined(LNCH_FEATURE_BORDER)
+    p_opts->p_color_leave =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_border_leave_color);
+#endif /* #if defined(LNCH_FEATURE_BORDER) */
+
+#if defined(LNCH_FEATURE_BORDER)
+    p_opts->p_color_enter =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_border_enter_color);
+#endif /* #if defined(LNCH_FEATURE_BORDER) */
+
+#if defined(LNCH_FEATURE_CHILD)
+    p_opts->p_key_child =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_child_key);
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
+
+#if defined(LNCH_FEATURE_CHILD)
     p_opts->p_exec_child =
         lnch_opts_find(p_ctxt, argc, argv,
             &g_child_program);
+#endif /* #if defined(LNCH_FEATURE_CHILD) */
+
+#if defined(LNCH_FEATURE_FOCUS)
+    p_opts->p_key_focus_left =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_focus_left_key);
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
+#if defined(LNCH_FEATURE_FOCUS)
+    p_opts->p_key_focus_next =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_focus_next_key);
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
+#if defined(LNCH_FEATURE_FOCUS)
+    p_opts->p_key_focus_right =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_focus_right_key);
+#endif /* #if defined(LNCH_FEATURE_FOCUS) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_left =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_grid_left_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_toggle =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_grid_toggle_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_right =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_grid_right_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_reset =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_grid_reset_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_snap =
+        lnch_opts_find(p_ctxt, argc, argv,
+            &g_grid_snap_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
 
     {
         struct lnch_key_descriptor o_mod_desc;

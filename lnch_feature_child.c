@@ -35,7 +35,7 @@ Description:
 #include "lnch_opts.h"
 
 /* Define a list of strings that need to be translated into key codes */
-static unsigned int kc_x = 0u;
+static struct lnch_key_descriptor kc_x;
 
 /* Two in one function, install a SIGCHLD handler and process a SIGCHLD signal.
 This function is required because we create child processes via the fork and
@@ -151,7 +151,7 @@ lnch_feature_child_key_press(
     struct lnch_ctxt const * const p_ctxt,
     XEvent const * const pev)
 {
-    if (kc_x == pev->xkey.keycode)
+    if (lnch_key_compare(&kc_x, pev))
     {
         lnch_feature_child_key_spawn(p_ctxt);
     }
@@ -201,7 +201,9 @@ lnch_feature_child_init(
     lnch_feature_child_sigchld(0);
 
     /* Grab keys for root window */
-    kc_x = lnch_key_grab(p_ctxt, p_display->root, p_opts->p_key_child);
+    lnch_key_parse(p_ctxt, p_opts->p_key_child, &kc_x);
+
+    lnch_key_grab(p_ctxt, p_display->root, &kc_x);
 
 } /* lnch_feature_child_init() */
 

@@ -144,34 +144,64 @@ Description:
     Register hot key for given window.
 
 */
-unsigned int
+void
 lnch_key_grab(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id,
-    char const * const p_key_string)
+    struct lnch_key_descriptor const * const p_desc)
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
     unsigned int j;
 
-    struct lnch_key_descriptor o_desc;
-
-    lnch_key_parse(p_ctxt, p_key_string, &o_desc);
-
     for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
     {
         XGrabKey(
             p_display->dpy,
-            o_desc.i_key_code,
-            o_desc.i_mod_mask|mods[j],
+            p_desc->i_key_code,
+            p_desc->i_mod_mask|mods[j],
             i_window_id,
             True,
             GrabModeAsync,
             GrabModeAsync);
     }
 
-    return o_desc.i_key_code;
-
 } /* lnch_key_grab() */
+
+/*
+
+Function: lnch_key_compare
+
+Description:
+
+    Detect if XEvent corresponds to grabbed hotkey.
+
+*/
+int
+lnch_key_compare(
+    struct lnch_key_descriptor const * const p_desc,
+    XEvent const * const p_event)
+{
+    int i_result;
+
+    if (p_event->xkey.keycode == p_desc->i_key_code)
+    {
+        if ((p_event->xkey.state & ~(LockMask | Mod2Mask)) == p_desc->i_mod_mask)
+        {
+            i_result = 1;
+        }
+        else
+        {
+            i_result = 0;
+        }
+    }
+    else
+    {
+        i_result = 0;
+    }
+
+    return i_result;
+
+} /* lnch_key_compare() */
 
 /* end-of-file: lnch_key.c */

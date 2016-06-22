@@ -32,15 +32,15 @@ Description:
 static int mw = 0;
 
 /* List of hotkeys for grid feature */
-static unsigned int kc_z = 0u;
+static struct lnch_key_descriptor kc_z;
 
-static unsigned int kc_w = 0u;
+static struct lnch_key_descriptor kc_w;
 
-static unsigned int kc_q = 0u;
+static struct lnch_key_descriptor kc_q;
 
-static unsigned int kc_e = 0u;
+static struct lnch_key_descriptor kc_e;
 
-static unsigned int kc_c = 0u;
+static struct lnch_key_descriptor kc_c;
 
 /* Commonly used structure */
 static XWindowAttributes wa;
@@ -63,17 +63,15 @@ lnch_feature_grid_grab_keys(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id)
 {
-    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+    lnch_key_grab(p_ctxt, i_window_id, &kc_z);
 
-    kc_z = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_reset);
+    lnch_key_grab(p_ctxt, i_window_id, &kc_w);
 
-    kc_w = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_toggle);
+    lnch_key_grab(p_ctxt, i_window_id, &kc_q);
 
-    kc_q = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_left);
+    lnch_key_grab(p_ctxt, i_window_id, &kc_e);
 
-    kc_e = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_right);
-
-    kc_c = lnch_key_grab(p_ctxt, i_window_id, p_opts->p_key_grid_snap);
+    lnch_key_grab(p_ctxt, i_window_id, &kc_c);
 
 } /* lnch_feature_grid_grab_keys() */
 
@@ -113,8 +111,21 @@ lnch_feature_grid_init(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
     /* Calculate width of a single monitor */
     mw = (p_display->sw >= 2048) ? p_display->sw/2 : p_display->sw;
+
+    /* Convert keys */
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_reset, &kc_z);
+
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_toggle, &kc_w);
+
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_left, &kc_q);
+
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_right, &kc_e);
+
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_snap, &kc_c);
 
     /* Enumerate existing windows */
     lnch_tree_enum(p_ctxt, &lnch_feature_grid_init_callback, NULL);
@@ -165,11 +176,11 @@ lnch_feature_grid_key_press(
 {
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
-    if ((kc_z == pev->xkey.keycode) ||
-        (kc_q == pev->xkey.keycode) ||
-        (kc_w == pev->xkey.keycode) ||
-        (kc_e == pev->xkey.keycode) ||
-        (kc_c == pev->xkey.keycode))
+    if (lnch_key_compare(&kc_z, pev) ||
+        lnch_key_compare(&kc_q, pev) ||
+        lnch_key_compare(&kc_w, pev) ||
+        lnch_key_compare(&kc_e, pev) ||
+        lnch_key_compare(&kc_c, pev))
     {
         int mx;
 
@@ -184,30 +195,30 @@ lnch_feature_grid_key_press(
 
         mx = ((wa.x + wa.width/2) >= mw) ? mw : 0;
 
-        if (kc_z == pev->xkey.keycode)
+        if (kc_z.i_key_code == pev->xkey.keycode)
         {
             wc.width = 486;
             wc.height = 331;
         }
-        else if (kc_w == pev->xkey.keycode)
+        else if (kc_w.i_key_code == pev->xkey.keycode)
         {
             wc.x = (wc.x + mw) % p_display->sw;
         }
-        else if (kc_q == pev->xkey.keycode)
+        else if (kc_q.i_key_code == pev->xkey.keycode)
         {
             wc.x = mx;
             wc.y = 0;
             wc.width = mw/2 - 2;
             wc.height = p_display->sh - 2;
         }
-        else if (kc_e == pev->xkey.keycode)
+        else if (kc_e.i_key_code == pev->xkey.keycode)
         {
             wc.x = mx + mw/2 - 1;
             wc.y = 0;
             wc.width = mw/2 - 1;
             wc.height = p_display->sh - 2;
         }
-        else if (kc_c == pev->xkey.keycode)
+        else if (kc_c.i_key_code == pev->xkey.keycode)
         {
             if (pev->xkey.y < wa.height/3)
             {

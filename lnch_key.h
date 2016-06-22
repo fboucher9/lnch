@@ -45,10 +45,15 @@ lnch_key_parse(
     char const * const p_key_string,
     struct lnch_key_descriptor * const p_desc);
 
-unsigned int
+void
 lnch_key_grab(
     struct lnch_ctxt const * const p_ctxt,
     Window const i_window_id,
-    char const * const p_key_string);
+    struct lnch_key_descriptor const * const p_desc);
+
+int
+lnch_key_compare(
+    struct lnch_key_descriptor const * const p_desc,
+    XEvent const * const p_event);
 
 /* end-of-file: lnch_key.h */
