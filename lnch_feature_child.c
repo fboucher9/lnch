@@ -100,7 +100,13 @@ lnch_feature_child_exec(
     {
         struct lnch_opts const * const p_opts = p_ctxt->p_opts;
 
-        execvp((char *)(p_opts->p_exec_child[0]), (char * *)(p_opts->p_exec_child));
+        static char const * g_exec_args[2];
+
+        g_exec_args[0] = p_opts->p_exec_child;
+
+        g_exec_args[1] = NULL;
+
+        execvp((char *)(g_exec_args[0]), (char * *)(g_exec_args));
     }
 
     /* If launch of child fails, exit the fork */

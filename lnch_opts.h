@@ -55,7 +55,7 @@ struct lnch_opts
 
     char const * p_key_grid_toggle;
 
-    char const * const * p_exec_child;
+    char const * p_exec_child;
 
     unsigned int i_mod_mask;
 
