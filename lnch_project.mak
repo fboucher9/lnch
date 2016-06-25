@@ -43,7 +43,7 @@ LNCH_HDRS = \
     $(LNCH_SRC_PATH)/lnch_os.h \
     $(LNCH_SRC_PATH)/lnch_tree.h
 
-.PHONY : all
+.PHONY : all clean
 
 # Default target
 all : $(LNCH_DST_PATH)/lnch
@@ -69,5 +69,12 @@ $(LNCH_DST_PATH)/lnch_os.h.gch : $(LNCH_SRC_PATH)/lnch_os.h
 
 # Indicate that all object files have dependency on precompiled header
 $(LNCH_SRCS) : $(LNCH_DST_PATH)/lnch_os.h.gch
+
+clean :
+	-rm -f $(LNCH_DST_PATH)/lnch
+	-rm -f $(LNCH_DST_PATH)/_obj_*.o
+	-rm -f $(LNCH_DST_PATH)/_obj_*.d
+	-rm -f $(LNCH_DST_PATH)/_obj_*.cmd
+	-rm -f $(LNCH_DST_PATH)/*.gch
 
 -include $(LNCH_DST_PATH)/_obj_*.o.d
