@@ -23,26 +23,6 @@ LNCH_SRCS = \
     $(LNCH_DST_PATH)/_obj_lnch_feature_redirect.o \
     $(LNCH_DST_PATH)/_obj_lnch_feature_movesize.o
 
-LNCH_HDRS = \
-    $(LNCH_SRC_PATH)/lnch_body.h \
-    $(LNCH_SRC_PATH)/lnch_cfg.h \
-    $(LNCH_SRC_PATH)/lnch_ctxt.h \
-    $(LNCH_SRC_PATH)/lnch_display.h \
-    $(LNCH_SRC_PATH)/lnch_feature_border.h \
-    $(LNCH_SRC_PATH)/lnch_feature_button2.h \
-    $(LNCH_SRC_PATH)/lnch_feature_child.h \
-    $(LNCH_SRC_PATH)/lnch_feature_focus.h \
-    $(LNCH_SRC_PATH)/lnch_feature_grid.h \
-    $(LNCH_SRC_PATH)/lnch_feature_movesize.h \
-    $(LNCH_SRC_PATH)/lnch_feature_redirect.h \
-    $(LNCH_SRC_PATH)/lnch_feature_xerror.h \
-    $(LNCH_SRC_PATH)/lnch_key.h \
-    $(LNCH_SRC_PATH)/lnch_main.h \
-    $(LNCH_SRC_PATH)/lnch_mods.h \
-    $(LNCH_SRC_PATH)/lnch_opts.h \
-    $(LNCH_SRC_PATH)/lnch_os.h \
-    $(LNCH_SRC_PATH)/lnch_tree.h
-
 .PHONY : all clean
 
 # Default target
@@ -52,9 +32,6 @@ $(LNCH_DST_PATH)/lnch: $(LNCH_SRCS)
 	@echo linking $@
 	@echo -o $@ $(LNCH_CFLAGS) $(LNCH_SRCS) $(LNCH_LDFLAGS) > $(LNCH_DST_PATH)/_obj_lnch.cmd
 	@$(LNCH_CC) @$(LNCH_DST_PATH)/_obj_lnch.cmd
-
-# Extra dependencies of target
-$(LNCH_DST_PATH)/lnch : $(LNCH_HDRS)
 
 # Build each object file
 $(LNCH_DST_PATH)/_obj_%.o : $(LNCH_SRC_PATH)/%.c
