@@ -142,6 +142,12 @@ lnch_feature_movesize_event(
 
                         wc.width = MAX(wa.width + pev->xmotion.x_root - ev0.xbutton.x_root, 1);
                     }
+                    else
+                    {
+                        wc.x = wa.x;
+
+                        wc.width = wa.width;
+                    }
 
                     if (ev0.xbutton.y_root < (wa.y + wa.height/3))
                     {
@@ -154,6 +160,12 @@ lnch_feature_movesize_event(
                         wc.y = wa.y;
 
                         wc.height = MAX(wa.height + pev->xmotion.y_root - ev0.xbutton.y_root, 1);
+                    }
+                    else
+                    {
+                        wc.y = wa.y;
+
+                        wc.height = wa.height;
                     }
                 }
 
