@@ -41,4 +41,7 @@ Description:
 /* Enable snap to grid using mouse button #2 */
 #define LNCH_FEATURE_BUTTON2
 
+/* Enable keepalive of X connection */
+#define LNCH_FEATURE_KEEPALIVE
+
 /* end-of-file: lnch_cfg.h */

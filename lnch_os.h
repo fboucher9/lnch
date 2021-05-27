@@ -35,10 +35,18 @@ Description:
 /* Include of sys.wait.h to define WNOHANG macro */
 #include <sys/wait.h>
 
+/* Include of poll.h to define poll() function */
+#include <poll.h>
+
 /* Include of Xlib.h for all X11 definitions, too many to list here */
 #include <X11/Xlib.h>
 
 /* Include of Xresource.h for XGetDefault */
 #include <X11/Xresource.h>
+
+/* Include of time.h to get clock_gettime() function. */
+#include <sys/time.h>
+
+typedef void lnch_avoid_empty_translation_unit;
 
 /* end-of-file: lnch_os.h */

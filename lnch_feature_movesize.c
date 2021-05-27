@@ -86,14 +86,18 @@ lnch_feature_movesize_event(
 
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
     if (pev)
     {
         /* Detect that one of the mouse buttons have been pressed for a
         client window.  The root window is ignored */
         if ((ButtonPress == pev->type) &&
             (pev->xbutton.window != None) &&
-            ((pev->xbutton.button == Button1) ||
-             (pev->xbutton.button == Button3)))
+            (((pev->xbutton.button == Button1) &&
+                ((pev->xbutton.state & (p_opts->i_mod_mask|ControlMask)) == (p_opts->i_mod_mask))) ||
+             ((pev->xbutton.button == Button3) &&
+                ((pev->xbutton.state & (p_opts->i_mod_mask|ControlMask)) == (p_opts->i_mod_mask)))))
         {
             /* Bring current window to foreground */
             XRaiseWindow(p_display->dpy, pev->xbutton.window);

@@ -51,7 +51,7 @@ static void lnch_feature_button2_grab(
 
     for (j = 0; j < sizeof(mods)/sizeof(mods[0]); j++)
     {
-        XGrabButton(p_display->dpy, Button2, p_opts->i_mod_mask|mods[j], i_window_id,
+        XGrabButton(p_display->dpy, Button1, p_opts->i_mod_mask|ControlMask|mods[j], i_window_id,
             False, ButtonPressMask, GrabModeAsync, GrabModeSync,
             None, None);
     }
@@ -82,13 +82,16 @@ lnch_feature_button2_event(
 
     struct lnch_display const * const p_display = p_ctxt->p_display;
 
+    struct lnch_opts const * const p_opts = p_ctxt->p_opts;
+
     if (pev)
     {
         /* Detect that one of the mouse buttons have been pressed for a
         client window.  The root window is ignored */
         if ((ButtonPress == pev->type) &&
             (pev->xbutton.window != None) &&
-            (pev->xbutton.button == Button2))
+            (pev->xbutton.button == Button1) &&
+            ((pev->xbutton.state & (p_opts->i_mod_mask|ControlMask)) == (p_opts->i_mod_mask|ControlMask)))
         {
             /* Bring current window to foreground */
             XRaiseWindow(p_display->dpy, pev->xbutton.window);
@@ -108,10 +111,8 @@ lnch_feature_button2_event(
         while one of the buttons is pressed. */
         else if (MotionNotify == pev->type)
         {
-            /* Calculate new position and size of client window.
-            If Button1 is pressed, then position is adjusted.
-            If Button3 is pressed, then size is adjusted. */
-            if (ev0.xbutton.button == Button2)
+            if ((ev0.xbutton.button == Button1) &&
+                ((ev0.xbutton.state & (p_opts->i_mod_mask|ControlMask)) == (p_opts->i_mod_mask|ControlMask)))
             {
                 int mx;
 
@@ -213,7 +214,8 @@ lnch_feature_button2_event(
         /* Detect that one of the mouse buttons has been released. */
         else if (ButtonRelease == pev->type)
         {
-            if (ev0.xbutton.button == Button2)
+            if ((ev0.xbutton.button == Button1) &&
+                ((ev0.xbutton.state & (p_opts->i_mod_mask|ControlMask)) == (p_opts->i_mod_mask|ControlMask)))
             {
                 XUngrabPointer(p_display->dpy, CurrentTime);
 

@@ -66,6 +66,10 @@ Description:
 #include "lnch_feature_button2.h"
 #endif /* #if defined(LNCH_FEATURE_BUTTON2) */
 
+#if defined(LNCH_FEATURE_KEEPALIVE)
+#include "lnch_feature_keepalive.h"
+#endif /* #if defined(LNCH_FEATURE_KEEPALIVE) */
+
 /*
 
 Structure: lnch_body
@@ -136,6 +140,10 @@ lnch_body_event(
 #if defined(LNCH_FEATURE_XERROR)
     lnch_feature_xerror_event(p_ctxt, pev);
 #endif /* #if defined(LNCH_FEATURE_XERROR) */
+
+#if defined(LNCH_FEATURE_KEEPALIVE)
+    lnch_feature_keepalive_event(p_ctxt, pev);
+#endif /* #if defined(LNCH_FEATURE_KEEPALIVE) */
 
 } /* lnch_body_event() */
 
@@ -214,6 +222,96 @@ lnch_body_cleanup(
 
 /*
 
+Function: lnch_body_poll
+
+Description:
+
+    Wait for event to be available.
+
+*/
+static
+int
+lnch_body_poll(
+    struct lnch_ctxt * const p_ctxt)
+{
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    struct pollfd a_descriptor[1u];
+
+    int i_poll_result = -1;
+
+    a_descriptor[0].fd = ConnectionNumber(p_display->dpy);
+
+    a_descriptor[0].events = POLLIN;
+
+    a_descriptor[0].revents = 0;
+
+    i_poll_result = poll(a_descriptor, 1, 100ul);
+
+    return i_poll_result;
+}
+
+/*
+
+*/
+static
+void
+lnch_body_step(
+    struct lnch_ctxt * const p_ctxt)
+{
+    struct lnch_display const * const p_display = p_ctxt->p_display;
+
+    while (XPending(p_display->dpy))
+    {
+        XEvent ev1;
+
+        if (0 == XNextEvent(p_display->dpy, &ev1))
+        {
+            lnch_body_event(p_ctxt, &ev1);
+        }
+        else
+        {
+            /* log of error! */
+        }
+    }
+
+} /* lnch_body_step() */
+
+/*
+
+Function: lnch_body_walk
+
+Description:
+
+    Dispatch a burst of events.  Dispatch events until the queue is empty.
+
+*/
+static
+void
+lnch_body_walk(
+    struct lnch_ctxt * const p_ctxt)
+{
+    int i_poll_result = -1;
+
+    i_poll_result = lnch_body_poll(p_ctxt);
+
+    if (0 == i_poll_result)
+    {
+        /* Timeout */
+        XEvent ev1;
+
+        ev1.type = LASTEvent + 1;
+
+        lnch_body_event(p_ctxt, &ev1);
+    }
+
+    /* Process of a single event */
+    lnch_body_step(p_ctxt);
+
+} /* lnch_body_walk() */
+
+/*
+
 Function: lnch_body_run
 
 Description:
@@ -225,22 +323,25 @@ void
 lnch_body_run(
     struct lnch_ctxt * const p_ctxt)
 {
-    struct lnch_display const * const p_display = p_ctxt->p_display;
+    lnch_body_event(p_ctxt, 0);
 
-    XEvent ev1;
+    /* Initialization is finished, point to an event object and get
+    an event from the event queue. */
 
-    XEvent * pev = NULL;
-
-    do
+    while ((1))
     {
-        /* Process of a single event */
-        lnch_body_event(p_ctxt, pev);
-
-        /* Initialization is finished, point to an event object and get
-        an event from the event queue. */
-        pev = &ev1;
+        lnch_body_walk(p_ctxt);
     }
-    while (!XNextEvent(p_display->dpy, pev));
+
+#if 0
+    {
+        XEvent ev1;
+
+        ev1.type = LASTEvent + 2;
+
+        lnch_body_event(p_ctxt, &ev1);
+    }
+#endif
 
 } /* lnch_body_run() */
 
