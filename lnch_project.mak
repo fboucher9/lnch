@@ -22,7 +22,8 @@ LNCH_SRCS = \
     $(LNCH_DST_PATH)/_obj_lnch_feature_child.o \
     $(LNCH_DST_PATH)/_obj_lnch_feature_redirect.o \
     $(LNCH_DST_PATH)/_obj_lnch_feature_movesize.o \
-    $(LNCH_DST_PATH)/_obj_lnch_feature_keepalive.o
+    $(LNCH_DST_PATH)/_obj_lnch_feature_keepalive.o \
+    $(LNCH_DST_PATH)/_obj_lnch_feature_timestamp.o
 
 .PHONY : all clean
 

@@ -361,19 +361,21 @@ g_grid_snap_key =
 
 static
 char const *
-lnch_opts_find(
+lnch_opts_find_string(
     struct lnch_ctxt const * const p_ctxt,
     int const argc,
     char const * const * const argv,
-    struct lnch_opts_descriptor const * const p_desc)
+    char const * const p_switch)
 {
     char const * p_value = NULL;
 
     int argi = 1u;
 
+    (void)p_ctxt;
+
     while (!p_value && (argi < argc))
     {
-        if (0 == strcmp(argv[argi++], p_desc->p_switch))
+        if (0 == strcmp(argv[argi++], p_switch))
         {
             if (argi < argc)
             {
@@ -382,6 +384,21 @@ lnch_opts_find(
             }
         }
     }
+
+    return p_value;
+}
+
+static
+char const *
+lnch_opts_find_res(
+    struct lnch_ctxt const * const p_ctxt,
+    int const argc,
+    char const * const * const argv,
+    struct lnch_opts_descriptor const * const p_desc)
+{
+    char const * p_value = NULL;
+
+    p_value = lnch_opts_find_string(p_ctxt, argc, argv, p_desc->p_switch);
 
     if (!p_value)
     {
@@ -397,7 +414,7 @@ lnch_opts_find(
 
     return p_value;
 
-} /* lnch_opts_find() */
+} /* lnch_opts_find_res() */
 
 /*
 
@@ -416,80 +433,86 @@ void lnch_opts_init(
     struct lnch_opts * const p_opts = p_ctxt->p_opts;
 
     p_opts->p_key_mod =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_mod_mask);
 
 #if defined(LNCH_FEATURE_BORDER)
     p_opts->p_color_leave =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_border_leave_color);
 #endif /* #if defined(LNCH_FEATURE_BORDER) */
 
 #if defined(LNCH_FEATURE_BORDER)
     p_opts->p_color_enter =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_border_enter_color);
 #endif /* #if defined(LNCH_FEATURE_BORDER) */
 
 #if defined(LNCH_FEATURE_CHILD)
     p_opts->p_key_child =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_child_key);
 #endif /* #if defined(LNCH_FEATURE_CHILD) */
 
 #if defined(LNCH_FEATURE_CHILD)
     p_opts->p_exec_child =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_child_program);
 #endif /* #if defined(LNCH_FEATURE_CHILD) */
 
 #if defined(LNCH_FEATURE_FOCUS)
     p_opts->p_key_focus_left =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_focus_left_key);
 #endif /* #if defined(LNCH_FEATURE_FOCUS) */
 
 #if defined(LNCH_FEATURE_FOCUS)
     p_opts->p_key_focus_next =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_focus_next_key);
 #endif /* #if defined(LNCH_FEATURE_FOCUS) */
 
 #if defined(LNCH_FEATURE_FOCUS)
     p_opts->p_key_focus_right =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_focus_right_key);
 #endif /* #if defined(LNCH_FEATURE_FOCUS) */
 
 #if defined(LNCH_FEATURE_GRID)
     p_opts->p_key_grid_left =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_grid_left_key);
 #endif /* #if defined(LNCH_FEATURE_GRID) */
 
 #if defined(LNCH_FEATURE_GRID)
     p_opts->p_key_grid_toggle =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_grid_toggle_key);
 #endif /* #if defined(LNCH_FEATURE_GRID) */
 
 #if defined(LNCH_FEATURE_GRID)
     p_opts->p_key_grid_right =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_grid_right_key);
 #endif /* #if defined(LNCH_FEATURE_GRID) */
 
 #if defined(LNCH_FEATURE_GRID)
     p_opts->p_key_grid_reset =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_grid_reset_key);
 #endif /* #if defined(LNCH_FEATURE_GRID) */
 
 #if defined(LNCH_FEATURE_GRID)
     p_opts->p_key_grid_snap =
-        lnch_opts_find(p_ctxt, argc, argv,
+        lnch_opts_find_res(p_ctxt, argc, argv,
             &g_grid_snap_key);
 #endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_TIMESTAMP)
+    p_opts->p_log_file =
+        lnch_opts_find_string(p_ctxt, argc, argv,
+            "-g");
+#endif /* #if defined(LNCH_FEATURE_TIMESTAMP) */
 
     {
         struct lnch_key_descriptor o_mod_desc;

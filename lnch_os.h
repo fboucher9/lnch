@@ -44,9 +44,10 @@ Description:
 /* Include of Xresource.h for XGetDefault */
 #include <X11/Xresource.h>
 
-/* Include of time.h to get clock_gettime() function. */
+/* Include of time.h for gettimeofday() function. */
 #include <sys/time.h>
 
-typedef void lnch_avoid_empty_translation_unit;
+/* Include of time.h for localtime() function. */
+#include <time.h>
 
 /* end-of-file: lnch_os.h */

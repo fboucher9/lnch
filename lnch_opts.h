@@ -85,6 +85,10 @@ struct lnch_opts
     char const * p_key_grid_toggle;
 #endif /* #if defined(LNCH_FEATURE_GRID) */
 
+#if defined(LNCH_FEATURE_TIMESTAMP)
+    char const * p_log_file;
+#endif /* #if defined(LNCH_FEATURE_TIMESTAMP) */
+
 }; /* struct lnch_opts */
 
 /* Interface: */

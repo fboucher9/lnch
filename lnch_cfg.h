@@ -44,4 +44,7 @@ Description:
 /* Enable keepalive of X connection */
 #define LNCH_FEATURE_KEEPALIVE
 
+/* Enable timestamp logging */
+#define LNCH_FEATURE_TIMESTAMP
+
 /* end-of-file: lnch_cfg.h */

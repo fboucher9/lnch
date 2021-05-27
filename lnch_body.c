@@ -70,6 +70,10 @@ Description:
 #include "lnch_feature_keepalive.h"
 #endif /* #if defined(LNCH_FEATURE_KEEPALIVE) */
 
+#if defined(LNCH_FEATURE_TIMESTAMP)
+#include "lnch_feature_timestamp.h"
+#endif /* #if defined(LNCH_FEATURE_TIMESTAMP) */
+
 /*
 
 Structure: lnch_body
@@ -144,6 +148,10 @@ lnch_body_event(
 #if defined(LNCH_FEATURE_KEEPALIVE)
     lnch_feature_keepalive_event(p_ctxt, pev);
 #endif /* #if defined(LNCH_FEATURE_KEEPALIVE) */
+
+#if defined(LNCH_FEATURE_TIMESTAMP)
+    lnch_feature_timestamp_event(p_ctxt, pev);
+#endif /* #if defined(LNCH_FEATURE_TIMESTAMP) */
 
 } /* lnch_body_event() */
 
