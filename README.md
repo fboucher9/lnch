@@ -1,32 +1,30 @@
 # lnch - X window manager and launcher for bfst terminal
 
-    The source is based on tinywm and dwm.
+The source is based on tinywm and dwm.
 
-Installation:
+### Installation
 
     make
-
     sudo cp lnch /bin
-
     lnch & disown
 
-Features:
+### Features
 
-    -   Mouse is used to move or resize a client window
+- Mouse is used to move or resize a client window
 
-    -   Hotkey to launch a new terminal
+- Hotkey to launch a new terminal
 
-    -   Add a border around client window
+- Add a border around client window
 
-    -   Hotkey to position a client window
+- Hotkey to position a client window
 
-    -   Hotkey to switch focus between clients
+- Hotkey to switch focus between clients
 
-    -   Filtering of X errors
+- Filtering of X errors
 
-    -   Handle window manager events to fix Firefox
+- Handle window manager events to fix Firefox
 
-Hotkeys:
+### Hotkeys
 
     [ q ] [ w ] [ e ]
       |     |     |
@@ -46,21 +44,28 @@ Hotkeys:
       |     +---------------- Spawn new terminal
       +---------------------- Resize current window to 80x25
 
+    [ 1 ] [ 2 ] [ 3 ] [ 4 ]
+      |     |     |     |
+      |     |     |     +---- Position window in top left corner
+      |     |     +---------- Position window in top right corner
+      |     +---------------- Position window in bottom left corner
+      +---------------------- Position window in bottom right corner
+
 Not implemented yet:
 
-    -   properties
+- properties
 
-    -   hints
+- hints
 
-    -   fullscreen atom
+- fullscreen atom
 
-    -   Cursor shapes
+- Cursor shapes
 
-    -   Kill of client
+- Kill of client
 
-    -   Clean exit
+- Clean exit
 
-    -   Colors for focus
+- Colors for focus
 
-    -   scan of existing clients
+- scan of existing clients
 
