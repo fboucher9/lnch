@@ -359,6 +359,102 @@ g_grid_snap_key =
 
 #endif /* #if defined(LNCH_FEATURE_GRID) */
 
+/* grid 1 key: */
+
+#if defined(LNCH_FEATURE_GRID)
+
+/* Switch */
+#define LNCH_OPTS_GRID_1_KEY_SWITCH "-k1"
+
+/* Resource */
+#define LNCH_OPTS_GRID_1_KEY_RES "KeyGrid1"
+
+/* Default key for grid 1 */
+#define LNCH_OPTS_GRID_1_KEY_DEFAULT "x-1"
+
+static
+struct lnch_opts_descriptor const
+g_grid_1_key =
+{
+    LNCH_OPTS_GRID_1_KEY_SWITCH,
+    LNCH_OPTS_GRID_1_KEY_RES,
+    LNCH_OPTS_GRID_1_KEY_DEFAULT
+};
+
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+/* grid 2 key: */
+
+#if defined(LNCH_FEATURE_GRID)
+
+/* Switch */
+#define LNCH_OPTS_GRID_2_KEY_SWITCH "-k2"
+
+/* Resource */
+#define LNCH_OPTS_GRID_2_KEY_RES "KeyGrid2"
+
+/* Default key for grid 2 */
+#define LNCH_OPTS_GRID_2_KEY_DEFAULT "x-2"
+
+static
+struct lnch_opts_descriptor const
+g_grid_2_key =
+{
+    LNCH_OPTS_GRID_2_KEY_SWITCH,
+    LNCH_OPTS_GRID_2_KEY_RES,
+    LNCH_OPTS_GRID_2_KEY_DEFAULT
+};
+
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+/* grid 3 key: */
+
+#if defined(LNCH_FEATURE_GRID)
+
+/* Switch */
+#define LNCH_OPTS_GRID_3_KEY_SWITCH "-k3"
+
+/* Resource */
+#define LNCH_OPTS_GRID_3_KEY_RES "KeyGrid3"
+
+/* Default key for grid 3 */
+#define LNCH_OPTS_GRID_3_KEY_DEFAULT "x-3"
+
+static
+struct lnch_opts_descriptor const
+g_grid_3_key =
+{
+    LNCH_OPTS_GRID_3_KEY_SWITCH,
+    LNCH_OPTS_GRID_3_KEY_RES,
+    LNCH_OPTS_GRID_3_KEY_DEFAULT
+};
+
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+/* grid 4 key: */
+
+#if defined(LNCH_FEATURE_GRID)
+
+/* Switch */
+#define LNCH_OPTS_GRID_4_KEY_SWITCH "-k4"
+
+/* Resource */
+#define LNCH_OPTS_GRID_4_KEY_RES "KeyGrid4"
+
+/* Default key for grid 4 */
+#define LNCH_OPTS_GRID_4_KEY_DEFAULT "x-4"
+
+static
+struct lnch_opts_descriptor const
+g_grid_4_key =
+{
+    LNCH_OPTS_GRID_4_KEY_SWITCH,
+    LNCH_OPTS_GRID_4_KEY_RES,
+    LNCH_OPTS_GRID_4_KEY_DEFAULT
+};
+
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
 static
 char const *
 lnch_opts_find_string(
@@ -506,6 +602,30 @@ void lnch_opts_init(
     p_opts->p_key_grid_snap =
         lnch_opts_find_res(p_ctxt, argc, argv,
             &g_grid_snap_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_1 =
+        lnch_opts_find_res(p_ctxt, argc, argv,
+            &g_grid_1_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_2 =
+        lnch_opts_find_res(p_ctxt, argc, argv,
+            &g_grid_2_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_3 =
+        lnch_opts_find_res(p_ctxt, argc, argv,
+            &g_grid_3_key);
+#endif /* #if defined(LNCH_FEATURE_GRID) */
+
+#if defined(LNCH_FEATURE_GRID)
+    p_opts->p_key_grid_4 =
+        lnch_opts_find_res(p_ctxt, argc, argv,
+            &g_grid_4_key);
 #endif /* #if defined(LNCH_FEATURE_GRID) */
 
 #if defined(LNCH_FEATURE_TIMESTAMP)

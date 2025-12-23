@@ -42,6 +42,14 @@ static struct lnch_key_descriptor kc_e;
 
 static struct lnch_key_descriptor kc_c;
 
+static struct lnch_key_descriptor kc_1;
+
+static struct lnch_key_descriptor kc_2;
+
+static struct lnch_key_descriptor kc_3;
+
+static struct lnch_key_descriptor kc_4;
+
 /* Commonly used structure */
 static XWindowAttributes wa;
 
@@ -72,6 +80,14 @@ lnch_feature_grid_grab_keys(
     lnch_key_grab(p_ctxt, i_window_id, &kc_e);
 
     lnch_key_grab(p_ctxt, i_window_id, &kc_c);
+
+    lnch_key_grab(p_ctxt, i_window_id, &kc_1);
+
+    lnch_key_grab(p_ctxt, i_window_id, &kc_2);
+
+    lnch_key_grab(p_ctxt, i_window_id, &kc_3);
+
+    lnch_key_grab(p_ctxt, i_window_id, &kc_4);
 
 } /* lnch_feature_grid_grab_keys() */
 
@@ -127,6 +143,14 @@ lnch_feature_grid_init(
 
     lnch_key_parse(p_ctxt, p_opts->p_key_grid_snap, &kc_c);
 
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_1, &kc_1);
+
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_2, &kc_2);
+
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_3, &kc_3);
+
+    lnch_key_parse(p_ctxt, p_opts->p_key_grid_4, &kc_4);
+
     /* Enumerate existing windows */
     lnch_tree_enum(p_ctxt, &lnch_feature_grid_init_callback, NULL);
 
@@ -180,7 +204,11 @@ lnch_feature_grid_key_press(
         lnch_key_compare(&kc_q, pev) ||
         lnch_key_compare(&kc_w, pev) ||
         lnch_key_compare(&kc_e, pev) ||
-        lnch_key_compare(&kc_c, pev))
+        lnch_key_compare(&kc_c, pev) ||
+        lnch_key_compare(&kc_1, pev) ||
+        lnch_key_compare(&kc_2, pev) ||
+        lnch_key_compare(&kc_3, pev) ||
+        lnch_key_compare(&kc_4, pev))
     {
         int mx;
 
@@ -217,6 +245,34 @@ lnch_feature_grid_key_press(
             wc.y = 0;
             wc.width = mw/2 - 1;
             wc.height = p_display->sh - 2;
+        }
+        else if (kc_1.i_key_code == pev->xkey.keycode)
+        {
+            wc.x = mx;
+            wc.y = 0;
+            wc.width = mw/2 - 2;
+            wc.height = p_display->sh/2 - 2;
+        }
+        else if (kc_2.i_key_code == pev->xkey.keycode)
+        {
+            wc.x = mx + mw/2 - 1;
+            wc.y = 0;
+            wc.width = mw/2 - 1;
+            wc.height = p_display->sh/2 - 1;
+        }
+        else if (kc_3.i_key_code == pev->xkey.keycode)
+        {
+            wc.x = mx;
+            wc.y = p_display->sh/2 - 1;
+            wc.width = mw/2 - 2;
+            wc.height = p_display->sh/2 - 1;
+        }
+        else if (kc_4.i_key_code == pev->xkey.keycode)
+        {
+            wc.x = mx + mw/2 - 1;;
+            wc.y = p_display->sh/2 - 1;
+            wc.width = mw/2 - 1;
+            wc.height = p_display->sh/2 - 1;
         }
         else if (kc_c.i_key_code == pev->xkey.keycode)
         {
